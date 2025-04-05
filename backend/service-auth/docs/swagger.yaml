@@ -1,0 +1,178 @@
+openapi: 3.0.0
+info:
+  title: Authentication Service API
+  version: 1.0.0
+  description: API для управления аутентификацией пользователей
+servers:
+  - url: http://192.168.0.15:3000/api/auth
+    description: Development server
+tags:
+  - name: Authentication
+    description: Операции аутентификации
+paths:
+  /login:
+    post:
+      tags: [Authentication]
+      summary: Аутентификация пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Успешная аутентификация
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+              example: access_cookie=abc123; HttpOnly; Secure; SameSite=Strict
+        '400':
+          description: Неверные входные данные
+        '401':
+          description: Неверные учетные данные
+        '500':
+          description: Ошибка сервера
+      security: []
+  /register:
+    post:
+      tags: [Authentication]
+      summary: Регистрация нового пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Пользователь успешно зарегистрирован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Неверные входные данные
+        '401':
+          description: Пользователь уже существует
+        '500':
+          description: Ошибка сервера
+      security: []
+  /signout:
+    post:
+      tags: [Authentication]
+      summary: Выход из системы
+      responses:
+        '200':
+          description: Успешный выход
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicResponse'
+        '500':
+          description: Ошибка сервера
+      security:
+        - cookieAuth: []
+  /validatetoken:
+    get:
+      tags: [Authentication]
+      summary: Проверка валидности токена
+      responses:
+        '200':
+          description: Токен валиден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenValidationResponse'
+        '401':
+          description: Невалидный токен
+      security:
+        - cookieAuth: []
+  /refresh:
+    post:
+      tags: [Authentication]
+      summary: Обновление access token
+      responses:
+        '200':
+          description: Токен успешно обновлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicResponse'
+        '400':
+          description: Отсутствует refresh token
+        '401':
+          description: Невалидный refresh token
+      security: []
+
+components:
+  schemas:
+    LoginRequest:
+      type: object
+      required:
+        - login
+        - password
+      properties:
+        login:
+          type: string
+          example: "user@example.com"
+        password:
+          type: string
+          example: "securePassword123"
+    RegisterRequest:
+      type: object
+      required:
+        - login
+        - password
+        - name
+      properties:
+        login:
+          type: string
+          example: "user@example.com"
+        password:
+          type: string
+          example: "securePassword123"
+        name:
+          type: string
+          example: "John Doe"
+    AuthResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Успешная авторизация"
+        userId:
+          type: integer
+          example: 1
+    BasicResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+    TokenValidationResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Token is valid"
+        userId:
+          type: integer
+          example: 1
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: access_cookie

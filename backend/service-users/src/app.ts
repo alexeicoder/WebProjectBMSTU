@@ -1,16 +1,10 @@
 import dotenv from 'dotenv';
 dotenv.config();
-
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-
-import authRoutes from './routes/routes'; // Используем import для auth_routes
-
-
-import swaggerUi from 'swagger-ui-express';
-import YAML from 'yamljs';
+import userRoutes from './routes/userRoutes'; // Используем import для auth_routes
 
 const app = express();
 
@@ -25,11 +19,6 @@ app.use(cors(
 ));
 
 // Подключение маршрутов
-app.use('/api/auth', authRoutes);
-// app.use('/api/users', usersRoutes);
-
-const swaggerDocument = YAML.load('./docs/swagger.yaml');
-
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api/user', userRoutes);
 
 export default app;

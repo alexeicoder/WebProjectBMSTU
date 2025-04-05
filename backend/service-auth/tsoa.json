@@ -1,0 +1,22 @@
+{
+    "entryFile": "src/app.ts",
+    "noImplicitAdditionalProperties": "throw-on-extras",
+    "controllerPathGlobs": [
+        "src/controllers/**/*.ts"
+    ],
+    "spec": {
+        "outputDirectory": "src/docs",
+        "specVersion": 3,
+        "basePath": "/api",
+        "securityDefinitions": {
+            "cookieAuth": {
+                "type": "apiKey",
+                "in": "cookie",
+                "name": "access_cookie"
+            }
+        }
+    },
+    "routes": {
+        "routesDir": "src/routes"
+    }
+}

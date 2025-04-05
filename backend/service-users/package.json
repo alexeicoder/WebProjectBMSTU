@@ -12,7 +12,6 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@types/yamljs": "^0.2.34",
     "bcryptjs": "^3.0.2",
     "body-parser": "^2.2.0",
     "cookie-parser": "^1.4.7",
@@ -22,9 +21,7 @@
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.14.1",
     "reflect-metadata": "^0.2.2",
-    "swagger-ui-express": "^5.0.1",
-    "typeorm": "^0.3.22",
-    "yamljs": "^0.3.0"
+    "typeorm": "^0.3.22"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.8",
@@ -33,10 +30,8 @@
     "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^22.14.0",
     "@types/pg": "^8.11.11",
-    "@types/swagger-ui-express": "^4.1.8",
     "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",
-    "tsoa": "^6.6.0",
     "typescript": "^5.8.2"
   }
 }

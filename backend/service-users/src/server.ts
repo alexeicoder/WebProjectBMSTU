@@ -1,11 +1,8 @@
 import dotenv from 'dotenv';
 dotenv.config();
-// console.log(process.env)
 
 import app from './app';
 import { createServer } from 'http';
-
-// import * as dotenv from 'dotenv';
 
 const PORT = process.env.PORT;
 const HOST = process.env.HOST;
@@ -16,7 +13,7 @@ console.log("PORT", PORT);
 console.log("HOST", HOST);
 
 server.listen(Number(PORT), String(HOST), () => {
-    console.log(`Server ready at http://${HOST}:${PORT}/api/auth`);
+    console.log(`Server ready at http://${HOST}:${PORT}/api/user`);
     console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 });
 
