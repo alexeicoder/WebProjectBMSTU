@@ -1,19 +1,21 @@
-export interface Token {
+import { Request } from 'express';
+
+export interface IToken {
     accessToken: string;
     refreshToken: string;
 }
 
-export interface TokenPayload {
+export interface ITokenPayload {
     userId: number;
 }
 
-export interface User {
+export interface IUser {
     id: number;
     login: string;
     password: string;
     name?: string;
 }
 
-export interface AuthRequest extends Request {
+export interface IAuthRequest extends Request {
     userId?: number;
 }

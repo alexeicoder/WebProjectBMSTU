@@ -1,30 +1,27 @@
-// Getting data from .env
 import dotenv from 'dotenv';
 dotenv.config();
 
 import App from "./core/app";
-import { database } from './core/container';
+import Database from './core/database';
+import { Container } from './core/container';
 
-database.checkConnection()
-    .then(isConnected => {
+async function startServer() {
+    const database = Database.getInstance();
+    try {
+        await database.connect();
+        const isConnected = await database.checkConnection();
         if (!isConnected) throw new Error('Database connection failed');
-        console.log("DB", database);
+
+        // Инициализируем контейнер ДО создания App
+        Container.init(database);
+
         const app = new App();
         app.start();
-    })
-    .catch(error => {
+
+    } catch (error) {
         console.error('Failed to start:', error);
         process.exit(1);
-    });
+    }
+}
 
-// // Обработка Ctrl+C
-// process.on('SIGINT', async () => {
-//     await app.stop();
-//     process.exit(0);
-// });
-
-// // Обработка других сигналов завершения
-// process.on('SIGTERM', async () => {
-//     await app.stop();
-//     process.exit(0);
-// });
+startServer();

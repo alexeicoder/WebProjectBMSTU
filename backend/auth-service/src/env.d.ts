@@ -11,7 +11,7 @@ declare namespace NodeJS {
         JWT_SECRET: string;
         JWT_REFRESH_SECRET: string;
         // Server configuration
-        HOST: string;
-        PORT: number;
+        APP_HOST: string;
+        APP_PORT: number;
     }
 }

@@ -2,9 +2,23 @@ import Database from './database';
 import { AuthController } from '../controllers/auth.controller';
 import { UserRepository } from '../repositories/user.repository';
 
-// Инициализируем зависимости
-const database = Database.getInstance();
-const userRepository = new UserRepository(database);
-const authController = new AuthController(userRepository);
+export class Container {
+    private static instance: Container;
+    public authController: AuthController;
 
-export { database, authController };
+    private constructor(database: Database) {
+        const userRepository = new UserRepository(database);
+        this.authController = new AuthController(userRepository);
+    }
+
+    public static init(database: Database): void {
+        Container.instance = new Container(database);
+    }
+
+    public static getAuthController(): AuthController {
+        if (!Container.instance) {
+            throw new Error('Container not initialized');
+        }
+        return Container.instance.authController;
+    }
+}

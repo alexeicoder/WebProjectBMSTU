@@ -1,29 +1,29 @@
 /* Контроллер: работа с HTTP (валидация, преобразование данных) */
 import { Request, Response } from "express";
-import { Token, AuthRequest } from "../interfaces/auth.interfaces";
+import { IToken, IAuthRequest } from "../interfaces/auth.interfaces";
 import { UserRepository } from '../repositories/user.repository';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
 export class AuthController {
-    private userRepository: UserRepository;
 
-    constructor(userRepository: UserRepository) {
-        this.userRepository = userRepository;
-        console.log(this.userRepository);
+    // Constuctor
+    constructor(private userRepository: UserRepository) {
+        // console.log("AuthController created, userRepository:", userRepository);
     }
 
-    private generateTokens(userId: number): Token {
+    // Methods
+    private generateTokens(userId: number): IToken {
         return {
             accessToken: jwt.sign({ userId }, process.env.JWT_SECRET!, { expiresIn: '1m' }),
             refreshToken: jwt.sign({ userId }, process.env.JWT_REFRESH_SECRET!, { expiresIn: '1h' })
         };
     }
 
-    public async validateToken(req: AuthRequest, res: Response) {
+    public async validateToken(req: IAuthRequest, res: Response) {
         res.status(200).json({
             success: true,
-            message: 'Token is valid',
+            message: 'IToken is valid',
             userId: req.userId
         });
     }
@@ -62,7 +62,10 @@ export class AuthController {
     }
 
     public async register(req: Request, res: Response): Promise<any> {
-        const { login, password, name } = req.body;
+        console.log("Register process started");
+        const login: string = req.body.login;
+        const password: string = req.body.password;
+        const name: string = req.body.name;
 
         if (!login || !password || !name) {
             return res.status(400).json({
@@ -133,7 +136,9 @@ export class AuthController {
             return res.status(200).json({
                 success: true,
                 message: "successful logging in",
-                userId: user.id
+                userId: user.id,
+                accessToken,
+                refreshToken
             });
 
         }
@@ -144,7 +149,7 @@ export class AuthController {
 
     }
 
-    private setCookies(res: Response, tokens: Token) {
+    private setCookies(res: Response, tokens: IToken) {
         res.cookie('access_cookie', tokens.accessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',

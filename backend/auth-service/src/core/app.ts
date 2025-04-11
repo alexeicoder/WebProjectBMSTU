@@ -7,8 +7,8 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
 class App {
-    private port: number = process.env.PORT as unknown as number;
-    private host: string = process.env.HOST as unknown as string;
+    private port: number = process.env.APP_PORT as unknown as number;
+    private host: string = process.env.APP_HOST as unknown as string;
     private app: express.Application;
     private server: Server;
 
