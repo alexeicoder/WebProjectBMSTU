@@ -1,35 +1,32 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ROUTES } from './routes/routes';
+import WelcomePage from './pages/WelcomePage/WelcomePage';
+// import SigninPage from './pages/SignInPage/SignInPage';
+// import SignupPage from './pages/SignupPage/SignupPage';
+// import HomePage from './pages/HomePage/HomePage';
+// import SettingsPage from './pages/SettingsPage/SettingsPage';
+
+import './App.css';
+import SigninPage from './pages/SigninPage/SigninPage';
+import SignupPage from './pages/SignupPage/SignupPage';
+import Header from './components/Header/Header';
+// import ProfilePage from './pages/ProfilePage/ProfilePage.jsx';
+// import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute.jsx';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Router>
+      <Routes>
+        <Route element={<Header />}>
+          <Route path={ROUTES.WELCOME} element={<WelcomePage />} />
+          <Route path={ROUTES.SIGN_IN} element={<SigninPage />} />
+          <Route path={ROUTES.SIGN_UP} element={<SignupPage />} />
+        </Route>
+        {/* <Route path={ROUTES.SETTINGS} element={<SettingsPage />} />
+          <Route path={ROUTES.HOME} element={<HomePage />} /> */}
+      </Routes>
+    </Router >
+  );
 }
 
-export default App
+export default App;
