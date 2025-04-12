@@ -25,7 +25,7 @@ const FormContainer: React.FC<FormContainerProps> = ({ children, head, footer })
 
 interface FormProps {
     children: ReactNode;
-    onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+    onSubmit?: (event: FormEvent<HTMLFormElement>) => void;
     className?: string;
     head?: ReactNode;
     footer?: ReactNode;

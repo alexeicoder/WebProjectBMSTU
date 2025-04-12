@@ -4,7 +4,7 @@ import { IAuthRequest } from '../interfaces/auth.interfaces';
 
 export const verifyToken = (req: IAuthRequest, res: Response, next: NextFunction): void => {
     const token = req.cookies.access_cookie;
-
+    console.log("verifyToken process started");
     if (!token) {
         res.status(401).json({
             success: false,

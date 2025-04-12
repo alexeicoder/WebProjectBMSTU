@@ -1,5 +1,6 @@
 import React from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+// import { Outlet, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ROUTES } from '../../routes/routes';
 import styles from './Header.module.css';
 
@@ -17,7 +18,6 @@ const Header: React.FC<HeaderProps> = () => {
             <div className={styles.header}>
                 <div className={styles.headerLogo} onClick={handleHeaderLogoClick} />
             </div>
-            <Outlet />
         </>
     );
 };

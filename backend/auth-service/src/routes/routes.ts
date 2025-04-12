@@ -16,9 +16,28 @@ router.post('/login', (req: Request, res: Response) => {
     Container.getAuthController().login(req, res);
 });
 
+router.post('/signout', (req: Request, res: Response) => {
+    Container.getAuthController().signout(req, res);
+});
+
 router.get('/validatetoken', verifyToken, (req: IAuthRequest, res: Response) => {
     Container.getAuthController().validateToken(req, res);
 })
 
+router.get('/data/:id', (req: Request, res: Response) => {
+    Container.getAuthController().findById(req, res);
+})
+
+router.get('/all', (_req: Request, res: Response) => {
+    Container.getAuthController().getAllUsers(_req, res);
+})
+
+router.put('/update/:id', verifyToken, (req: IAuthRequest, res: Response) => {
+    Container.getAuthController().updateUser(req, res);
+});
+
+// router.delete('/delete/:id', verifyToken, (req: IAuthRequest, res: Response) => {
+//     Container.getAuthController().deleteUser(req, res);
+// });
 
 export default router;

@@ -2,13 +2,13 @@ import React, { InputHTMLAttributes } from 'react';
 import styles from './Input.module.css';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-    id: string;
+    id?: string;
     className?: string;
     value: string;
     placeholder?: string;
     required?: boolean;
     autoComplete?: string;
-    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
     onClick?: (event: React.MouseEvent<HTMLInputElement>) => void;
 }
 

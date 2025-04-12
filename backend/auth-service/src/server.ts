@@ -12,7 +12,6 @@ async function startServer() {
         const isConnected = await database.checkConnection();
         if (!isConnected) throw new Error('Database connection failed');
 
-        // Инициализируем контейнер ДО создания App
         Container.init(database);
 
         const app = new App();

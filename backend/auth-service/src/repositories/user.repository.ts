@@ -38,6 +38,53 @@ export class UserRepository {
 
     public async getAllUsers(): Promise<IUser[]> {
         const result = await this.db.query<IUser>('SELECT * FROM users');
+
         return result.rows;
+    }
+
+    public async updateUser(userId: number, updateData: Partial<IUser>): Promise<IUser | null> {
+        // Формируем части SQL запроса динамически
+        const setClauses: string[] = [];
+        const values: any[] = [];
+        let paramIndex = 1;
+
+        // Исключаем поле id из обновления
+        const { id, ...dataToUpdate } = updateData;
+
+        // Подготавливаем параметры для запроса
+        for (const [key, value] of Object.entries(dataToUpdate)) {
+            if (value !== undefined) {
+                setClauses.push(`${key} = $${paramIndex}`);
+                values.push(value);
+                paramIndex++;
+            }
+        }
+
+        // Если нечего обновлять
+        if (setClauses.length === 0) {
+            return null;
+        }
+
+        // Добавляем userId в конец массива значений
+        values.push(userId);
+
+        try {
+            // Формируем SQL запрос
+            const query = `
+            UPDATE users 
+            SET ${setClauses.join(', ')} 
+            WHERE id = $${paramIndex}
+            RETURNING id, login, name
+        `;
+
+            // Выполняем запрос
+            const result = await this.db.query<IUser>(query, values);
+
+            // Возвращаем обновленного пользователя или null если не найден
+            return result.rows[0] || null;
+        } catch (error) {
+            console.error('Error updating user:', error);
+            throw error;
+        }
     }
 }
