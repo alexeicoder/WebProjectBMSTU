@@ -6,6 +6,7 @@ import styles from './SettingsPage.module.css';
 import Label from '../../components/Label/Label';
 import FormElement from '../../components/FormElement/FormElement';
 import Checkbox from '../../components/Checkbox/Checkbox';
+import { ROUTES } from '../../routes/routes';
 
 interface UserData {
   id: number;
@@ -21,6 +22,7 @@ const SettingsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
   const [changePassword, setChangePassword] = useState<boolean>(false);
+  const [isDeleted, setIsDeleted] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -116,6 +118,29 @@ const SettingsPage: React.FC = () => {
     setChangePassword(!changePassword);
   };
 
+  const handleDeleteClick = async () => {
+    if (!userId) return;
+
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`http://192.168.0.15:3000/api/auth/delete/${userId}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to delete user data');
+      }
+      setIsDeleted(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to delete user data.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   if (isLoading) {
     return <div className={styles.layout}>Загрузка...</div>;
   }
@@ -133,6 +158,21 @@ const SettingsPage: React.FC = () => {
         </div>
       </>
     );
+  }
+
+  if (isDeleted) {
+    return (
+      <>
+        <div className={styles.layout}>Аккаунт успешно удален
+          <p></p>
+          <Button type="button" onClick={() => {
+            window.location.href = ROUTES.WELCOME;
+          }}>
+            ОК
+          </Button>
+        </div>
+      </>
+    )
   }
 
   if (!userData || !userId) {
@@ -209,6 +249,11 @@ const SettingsPage: React.FC = () => {
               Редактировать
             </Button>
           )}
+        </FormElement>
+        <FormElement>
+          <Button type="button" onClick={handleDeleteClick} disabled={isLoading}>
+            Удалить профиль
+          </Button>
         </FormElement>
       </Form>
     </div>

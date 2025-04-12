@@ -36,8 +36,8 @@ router.put('/update/:id', verifyToken, (req: IAuthRequest, res: Response) => {
     Container.getAuthController().updateUser(req, res);
 });
 
-// router.delete('/delete/:id', verifyToken, (req: IAuthRequest, res: Response) => {
-//     Container.getAuthController().deleteUser(req, res);
-// });
+router.delete('/delete/:id', verifyToken, (req: IAuthRequest, res: Response) => {
+    Container.getAuthController().deleteUser(req, res);
+});
 
 export default router;

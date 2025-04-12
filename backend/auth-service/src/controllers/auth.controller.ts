@@ -282,9 +282,28 @@ export class AuthController {
         }
     }
 
-    // public async deleteUser(req: IAuthRequest, res: Response): Promise<any> {
-    //     return;
-    // }
+    public async deleteUser(req: IAuthRequest, res: Response): Promise<any> {
+        const userId: number = req.userId as unknown as number;
+
+        if (isNaN(userId) || userId === null || userId === undefined) {
+            return res.status(400).json({ message: 'Invalid user ID' });
+        }
+
+        try {
+            const deletedUser = await this.userRepository.deleteUser(userId);
+
+            if (!deletedUser) {
+                return res.status(404).json({ message: 'User is not deleted!' });
+            }
+
+            this.clearCookies(res);
+            return res.status(200).json({ message: 'User deleted successfully' });
+
+        } catch (error) {
+            console.error("Error deleting user:", error);
+            return res.status(500).json({ message: "Internal server error" });
+        }
+    }
 
     private setCookies(res: Response, tokens: IToken) {
         res.cookie('access_cookie', tokens.accessToken, {

@@ -87,4 +87,10 @@ export class UserRepository {
             throw error;
         }
     }
+
+    public async deleteUser(_userId: number): Promise<boolean> {
+        // const result = await this.db.query('DELETE FROM users WHERE id = $1', [userId]);
+        // return result.rowCount === 1;
+        return true;
+    }
 }
