@@ -48,11 +48,11 @@ function HomePage() {
     }, []);
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return <div>Загрузка...</div>;
     }
 
     if (error) {
-        return <div>Error: {error}</div>;
+        return <div>Ошибка: {error}</div>;
     }
 
     // Check if foodItems is null before mapping
@@ -69,8 +69,8 @@ function HomePage() {
                         <div className={styles.foodInfo}>
                             <h3 className={styles.foodName}>{item.name}</h3>
                             <p className={styles.foodDescription}>{item.description}</p>
-                            <p className={styles.foodPrice}>Price: {item.price}</p>
-                            <p className={styles.foodCount}>Count: {item.count}</p>
+                            <p className={styles.foodPrice}>Цена: {item.price}</p>
+                            {/* <p className={styles.foodCount}>Count: {item.count}</p> */}
                         </div>
                     </div>
                 ))}
