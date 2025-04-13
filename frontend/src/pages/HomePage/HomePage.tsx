@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 // import { ROUTES } from '../../routes/routes';
 import PageLayout from '../../components/PageLayout/PageLayout';
 import styles from './HomePage.module.css';
+import FormMessageBlock from '../../components/FormMessageBlock/FormMessageBlock';
 
 interface FoodItem {
     id: number;
@@ -26,7 +27,7 @@ function HomePage() {
             try {
                 const response = await fetch('http://192.168.0.15:3200/api/food/all');
                 if (!response.ok) {
-                    throw new Error('Failed to fetch food items');
+                    throw new Error('Не удалось загрузить список продуктов. Попробуйте позже');
                 }
                 const data = await response.json();
 
@@ -38,7 +39,8 @@ function HomePage() {
                     throw new Error('Data received is not an array');
                 }
             } catch (err) {
-                setError(err instanceof Error ? err.message : 'An unexpected error occurred.');
+                // setError(err instanceof Error ? err.message : 'An unexpected error occurred.');
+                setError("Не удалось загрузить список продуктов. Мы уже работает над этим. Попробуйте повторить запрос позже.");
                 setFoodItems([]); // Set to empty array on error
             } finally {
                 setIsLoading(false);
@@ -52,7 +54,14 @@ function HomePage() {
     }
 
     if (error) {
-        return <div>Ошибка: {error}</div>;
+        // return <div>Ошибка: {error}</div>;
+        return (
+            <>
+                <PageLayout>
+                    <FormMessageBlock message={error} type='error' />
+                </PageLayout>
+            </>
+        )
     }
 
     // Check if foodItems is null before mapping

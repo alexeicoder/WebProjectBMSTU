@@ -7,6 +7,8 @@ import Label from '../../components/Label/Label';
 import FormElement from '../../components/FormElement/FormElement';
 import Checkbox from '../../components/Checkbox/Checkbox';
 import { ROUTES } from '../../routes/routes';
+import FormMessageBlock from '../../components/FormMessageBlock/FormMessageBlock';
+import PageLayout from '../../components/PageLayout/PageLayout';
 
 interface UserData {
   id: number;
@@ -148,14 +150,16 @@ const SettingsPage: React.FC = () => {
   if (error) {
     return (
       <>
-        <div className={styles.layout}>Ошибка: {error}
-          <p></p>
+        {/* <div className={styles.layout}> */}
+        <PageLayout>
+          <FormMessageBlock message={error} type='error' />
           <Button type="button" onClick={() => {
             window.location.reload();
           }}>
             ОК
           </Button>
-        </div>
+        </PageLayout>
+        {/* </div> */}
       </>
     );
   }
