@@ -4,6 +4,7 @@ import { Request, Response } from "express";
 import { OrderRepository } from '../repositories/order.repository';
 // import jwt from 'jsonwebtoken';
 import axios, { AxiosError } from "axios";
+import { IFood } from "../interfaces/order.interfaces";
 
 export class OrderController {
 
@@ -101,6 +102,41 @@ export class OrderController {
         }
     }
 
+    public async createOrder(req: Request, res: Response): Promise<any> {
 
+        const ownerId: number = parseInt(req.body.ownerId);
+        const foodItems: IFood[] = req.body.foodItems;
 
+        console.log(foodItems)
+
+        if (!ownerId) {
+            return res.status(400).json({ message: 'Owner ID is required' });
+        }
+
+        if (!foodItems
+            || Object.keys(foodItems).length === 0
+            || !Array.isArray(foodItems)) {
+            return res.status(400).json({ message: 'Food items are required' });
+        }
+
+        try {
+            const ownerExists = await axios.get('http://192.168.0.15:3000/api/auth/exists/user/' + ownerId);
+
+            if (ownerExists.data.exists === false) {
+                return res.status(404).json({ message: 'Owner not found' });
+            }
+
+            const order = await this.orderRepository.createOrder(ownerId, foodItems);
+
+            return res.status(200).json(order);
+        }
+        catch (error) {
+            if (axios.isAxiosError(error)) {
+                const axiosError = error as AxiosError;
+                if (axiosError.response?.status === 400) {
+                    return res.status(400).json({ message: 'Owner ID is required' });
+                }
+            }
+        }
+    }
 }

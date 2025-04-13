@@ -1,5 +1,5 @@
 .foodCard {
-    color: var(--button-textColor-default);
+    color: var(--fgColor-default);
     border: 1px solid var(--button-borderColor-default);
     border-radius: 10px;
     overflow: hidden;

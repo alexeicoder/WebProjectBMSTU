@@ -47,7 +47,7 @@ const SettingsPage: React.FC = () => {
         setUserId(userId);
 
         // Then fetch user data
-        const userResponse = await fetch(`http://192.168.0.15:3000/api/auth/data/${userId}`);
+        const userResponse = await fetch(`http://192.168.0.15:3000/api/auth/find/user/id/${userId}`);
         if (!userResponse.ok) {
           throw new Error('Не удалось загрузить данные о пользователе. Войдите снова.');
         }
@@ -198,7 +198,7 @@ const SettingsPage: React.FC = () => {
               onChange={handleInputChange}
             />
           ) : (
-            <Input value={userData.name} disabled={true} />
+            <Input name="name" value={userData.name} disabled={true} />
           )}
         </FormElement>
         <FormElement>
@@ -212,7 +212,7 @@ const SettingsPage: React.FC = () => {
               onChange={handleInputChange}
             />
           ) : (
-            <Input value={userData.login} disabled={true} />
+            <Input name="login" value={userData.login} disabled={true} />
           )}
         </FormElement>
         {isEditing && (
@@ -238,7 +238,8 @@ const SettingsPage: React.FC = () => {
               </FormElement>
             )}
           </>
-        )}
+        )
+        }
         <FormElement>
           {isEditing ? (
             <>
@@ -260,7 +261,7 @@ const SettingsPage: React.FC = () => {
             Удалить профиль
           </Button>
         </FormElement>
-      </Form>
+      </Form >
     </>
   );
 };

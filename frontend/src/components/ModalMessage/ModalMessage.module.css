@@ -48,7 +48,7 @@
 
 .message {
     flex-grow: 1;
-    color: var(--button-textColor-default);
+    color: var(--fgColor-default);
 }
 
 .close {
