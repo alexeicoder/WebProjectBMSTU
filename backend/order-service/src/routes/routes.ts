@@ -1,24 +1,23 @@
 import { Router, Request, Response } from "express";
 import { Container } from '../core/container';
-import { IAuthRequest } from "../interfaces/order.interfaces";
-import { verifyToken } from '../middleware/auth.middleware';
 
 const router: Router = Router();
 
 router.get('/', (_req: Request, res: Response) => {
-    res.send('Welcome to Auth Service API');
+    res.send('Welcome to Order Service API');
 });
 
-router.post('/register', (req: Request, res: Response) => {
-    Container.getAuthController().register(req, res)
-});
-router.post('/login', (req: Request, res: Response) => {
-    Container.getAuthController().login(req, res);
+router.get('/find/id/:id', (_req: Request, res: Response) => {
+    Container.getOrderController().findById(_req, res);
 });
 
-router.get('/validatetoken', verifyToken, (req: IAuthRequest, res: Response) => {
-    Container.getAuthController().validateToken(req, res);
-})
+router.get('/find/owner/id/:id', (_req: Request, res: Response) => {
+    Container.getOrderController().findByOwnerId(_req, res);
+});
+
+router.get('/find/owner/login/:owner_login', (_req: Request, res: Response) => {
+    Container.getOrderController().findByOwnerLogin(_req, res);
+});
 
 
 export default router;

@@ -93,4 +93,11 @@ export class UserRepository {
         // return result.rowCount === 1;
         return true;
     }
+
+    public async ifExistsById(id: number): Promise<boolean> {
+
+        const user = this.findById(id);
+        if (await user) return true;
+        else return false;
+    }
 }

@@ -208,6 +208,34 @@ export class AuthController {
 
     }
 
+    public async findByLogin(req: Request, res: Response): Promise<any> {
+        const login: string = req.params.login as unknown as string;
+
+        console.log(login)
+
+        if (!login) {
+            return res.status(400).json({ message: 'Login is required' });
+        }
+
+        if (validateLogin(login) === false) {
+            return res.status(400).json({ message: 'Некорректный логин.' });
+        }
+
+        try {
+            const user = await this.userRepository.findByLogin(login);
+
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            return res.status(200).json(user);
+
+        } catch (error) {
+            console.error('Ошибка при получении данных пользователя по логину:', error);
+            res.status(500).json({ message: 'Ошибка сервера.' });
+        }
+    }
+
     public async getAllUsers(_req: Request, res: Response): Promise<any> {
 
         try {
@@ -304,6 +332,28 @@ export class AuthController {
             return res.status(500).json({ message: "Internal server error" });
         }
     }
+
+    public async ifExistsById(req: Request, res: Response): Promise<any> {
+        const userId: number = parseInt(req.params.id);
+
+        if (!userId) {
+            return res.status(400).json({ message: 'user ID is required' });
+        }
+
+        // if (isNaN(userId)) {
+        //     return res.status(400).json({ message: 'user ID must be a number' });
+        // }
+
+        try {
+            const result = await this.userRepository.ifExistsById(userId);
+            return res.status(200).json({ exists: result });
+
+        } catch (error) {
+            console.error('Ошибка при проверке существования пользователя:', error);
+            res.status(500).json({ message: 'Ошибка сервера.' });
+        }
+    }
+
 
     private setCookies(res: Response, tokens: IToken) {
         res.cookie('access_cookie', tokens.accessToken, {

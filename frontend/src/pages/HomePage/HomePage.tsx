@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import PageLayout from '../../components/PageLayout/PageLayout';
+// import PageLayout from '../../components/PageLayout/PageLayout';
 import styles from './HomePage.module.css';
 import FormMessageBlock from '../../components/FormMessageBlock/FormMessageBlock';
 import Button from '../../components/Button/Button';

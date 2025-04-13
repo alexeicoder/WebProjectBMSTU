@@ -24,20 +24,28 @@ router.get('/validatetoken', verifyToken, (req: IAuthRequest, res: Response) => 
     Container.getAuthController().validateToken(req, res);
 })
 
-router.get('/data/:id', (req: Request, res: Response) => {
+router.get('/find/user/id/:id', (req: Request, res: Response) => {
     Container.getAuthController().findById(req, res);
 })
 
-router.get('/all', (_req: Request, res: Response) => {
+router.get('/find/user/login/:login', (req: Request, res: Response) => {
+    Container.getAuthController().findByLogin(req, res);
+})
+
+router.get('/find/all', (_req: Request, res: Response) => {
     Container.getAuthController().getAllUsers(_req, res);
 })
 
-router.put('/update/:id', verifyToken, (req: IAuthRequest, res: Response) => {
+router.put('/update/user/:id', verifyToken, (req: IAuthRequest, res: Response) => {
     Container.getAuthController().updateUser(req, res);
 });
 
-router.delete('/delete/:id', verifyToken, (req: IAuthRequest, res: Response) => {
+router.delete('/delete/user/:id', verifyToken, (req: IAuthRequest, res: Response) => {
     Container.getAuthController().deleteUser(req, res);
+});
+
+router.get('/exists/user/:id', (req: Request, res: Response) => {
+    Container.getAuthController().ifExistsById(req, res);
 });
 
 export default router;

@@ -28,7 +28,7 @@ class App {
                 // withCredentials: true
             }
         ));
-        app.use("/api/auth/", router);
+        app.use("/api/order/", router);
 
         return app;
     }
@@ -45,7 +45,7 @@ class App {
         // }
         // Starting server
         this.server.listen(this.port, this.host, () => {
-            console.log(`Auth server is running on url http://${this.host}:${this.port}/api/auth`)
+            console.log(`Order server is running on url http://${this.host}:${this.port}/api/order`)
         });
     }
 
