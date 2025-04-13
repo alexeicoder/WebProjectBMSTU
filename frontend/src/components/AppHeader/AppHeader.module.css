@@ -6,6 +6,9 @@
     background-color: var(--bgColor-muted);
     height: 64px;
     box-sizing: border-box;
+    position: fixed;
+    z-index: 100;
+    width: 100%;
     /* gap: 20px; */
     /* padding: 0 64px; */
 }

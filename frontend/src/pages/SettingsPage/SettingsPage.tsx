@@ -184,8 +184,9 @@ const SettingsPage: React.FC = () => {
   }
 
   return (
-    <div className={styles.layout}>
-      <Form head={"Настроить профиль"}>
+    <>
+      <h1 className={styles.header}>Настроить профиль</h1>
+      <Form>
         <FormElement>
           <Label htmlFor="name">Имя:</Label>
           {isEditing ? (
@@ -260,7 +261,7 @@ const SettingsPage: React.FC = () => {
           </Button>
         </FormElement>
       </Form>
-    </div>
+    </>
   );
 };
 

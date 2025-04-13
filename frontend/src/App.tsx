@@ -10,26 +10,34 @@ import SettingsPage from './pages/SettingsPage/SettingsPage';
 import Layout from './components/Layout/Layout';
 import AppLayout from './components/AppLayout/AppLayout';
 import HomePage from './pages/HomePage/HomePage';
+import CartPage from './pages/CartPage/CartPage';
+
+import { CartProvider } from './context/CartContext/CartContext';
 // import ProfilePage from './pages/ProfilePage/ProfilePage.jsx';
 // import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute.jsx';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route element={<Layout />}>
-          <Route path={ROUTES.WELCOME} element={<WelcomePage />} />
-          <Route path={ROUTES.SIGN_IN} element={<SigninPage />} />
-          <Route path={ROUTES.SIGN_UP} element={<SignupPage />} />
-        </Route>
-        <Route element={<AppLayout />}>
-          <Route path={ROUTES.HOME} element={<HomePage />} />
-          <Route path={ROUTES.SETTINGS} element={<SettingsPage />} />
-        </Route>
-        {/* <Route path={ROUTES.SETTINGS} element={<SettingsPage />} />
+    <CartProvider>
+      <Router>
+        <Routes>
+          <Route element={<Layout />}>
+            <Route path={ROUTES.WELCOME} element={<WelcomePage />} />
+            <Route path={ROUTES.SIGN_IN} element={<SigninPage />} />
+            <Route path={ROUTES.SIGN_UP} element={<SignupPage />} />
+          </Route>
+          <Route element={<AppLayout />}>
+
+            <Route path={ROUTES.HOME} element={<HomePage />} />
+            <Route path={ROUTES.CART} element={<CartPage />} />
+            <Route path={ROUTES.SETTINGS} element={<SettingsPage />} />
+
+          </Route>
+          {/* <Route path={ROUTES.SETTINGS} element={<SettingsPage />} />
           <Route path={ROUTES.HOME} element={<HomePage />} /> */}
-      </Routes>
-    </Router >
+        </Routes>
+      </Router >
+    </CartProvider>
   );
 }
 

@@ -11,6 +11,7 @@ export const enum ROUTES {
     BOOK_VIEW = '/book/view/',
     AUTHOR_VIEW = '/author/view/',
     SERIES_VIEW = '/series/view',
+    CART = '/cart'
 }
 
 const SERVICE_AUTH_BASE_URL = 'http://192.168.0.15:3000/api/auth';

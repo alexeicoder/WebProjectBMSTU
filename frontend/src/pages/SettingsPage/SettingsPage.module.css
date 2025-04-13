@@ -4,3 +4,9 @@
     align-items: center;
     flex-direction: column;
 }
+
+.header {
+    margin-top: 41px;
+    margin-left: 20px;
+    margin-bottom: 0;
+}

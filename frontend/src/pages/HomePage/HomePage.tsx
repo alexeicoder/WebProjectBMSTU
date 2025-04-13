@@ -1,13 +1,11 @@
-// import React, { useEffect, useState } from 'react';
 import { useEffect, useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
-// import { ROUTES } from '../../routes/routes';
 import PageLayout from '../../components/PageLayout/PageLayout';
 import styles from './HomePage.module.css';
 import FormMessageBlock from '../../components/FormMessageBlock/FormMessageBlock';
 import Button from '../../components/Button/Button';
-import { getImgSrc } from '../../utils/utils';
 import FoodCard from '../../components/FoodCard/FoodCard';
+import { useCart } from '../../context/CartContext/CartContext';
+import ModalMessage from '../../components/ModalMessage/ModalMessage';
 
 interface FoodItem {
     id: number;
@@ -16,7 +14,7 @@ interface FoodItem {
     price: number;
     description: string;
     img: string;
-    id_category: number; // Add id_category
+    id_category: number;
     category_name: string;
 }
 
@@ -31,6 +29,9 @@ function HomePage() {
     const [error, setError] = useState<string | null>(null);
     const [categories, setCategories] = useState<Category[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+    const { cart, addToCart } = useCart();
+    const [warn, setWarn] = useState<string | null>(null);
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -58,7 +59,7 @@ function HomePage() {
 
         const fetchCategories = async () => {
             try {
-                const response = await fetch('http://192.168.0.15:3200/api/food/category/all'); // Replace with your actual endpoint
+                const response = await fetch('http://192.168.0.15:3200/api/food/category/all');
                 if (!response.ok) {
                     throw new Error('Failed to fetch categories');
                 }
@@ -77,6 +78,31 @@ function HomePage() {
         setSelectedCategory(categoryId);
     };
 
+    const handleAddToCart = (productId: number, quantity: number) => {
+        const foodItem = foodItems?.find((item) => item.id === productId);
+        if (!foodItem) {
+            console.error(`Food item with id ${productId} not found`);
+            return;
+        }
+
+        const existingCartItem = cart.find((item) => item.productId === productId);
+        const currentQuantityInCart = existingCartItem ? existingCartItem.quantity : 0;
+        const totalQuantity = currentQuantityInCart + quantity;
+
+        if (totalQuantity > foodItem.count) {
+            setWarn(`Вы не можете добавить продукт "${foodItem.name}" больше чем ${foodItem.count} позиций.`);
+            // setError(`Нельзя добавить больше ${foodItem.count} ${foodItem.name}`);
+            return;
+        }
+        setWarn(null);
+        setError(null);
+        addToCart(productId, quantity);
+    };
+
+    const handleCloseWarn = () => {
+        setWarn(null);
+    };
+
     const filteredFoodItems = selectedCategory
         ? foodItems?.filter((item) => item.id_category === selectedCategory)
         : foodItems;
@@ -87,9 +113,9 @@ function HomePage() {
 
     if (error) {
         return (
-            <PageLayout>
-                <FormMessageBlock message={error} type='error' />
-            </PageLayout>
+            // <PageLayout>
+            <FormMessageBlock message={error} type='error' />
+            // </PageLayout>
         );
     }
 
@@ -99,7 +125,6 @@ function HomePage() {
 
     return (
         <>
-
             <div className={styles.categoryButtons}>
                 <Button
                     className={`${styles.categoryButton} ${selectedCategory === null ? styles.active : ''}`}
@@ -117,20 +142,25 @@ function HomePage() {
                     </Button>
                 ))}
             </div>
-            <PageLayout>
-                <div className={styles.foodGrid}>
-                    {filteredFoodItems?.map((item) => (
-                        <FoodCard
-                            key={item.id}
-                            id={item.id}
-                            name={item.name}
-                            description={item.description}
-                            price={item.price}
-                            category_name={item.category_name}
-                        />
-                    ))}
-                </div>
-            </PageLayout>
+            {/* <PageLayout> */}
+            {warn && <ModalMessage message={warn} type='warning' onClose={handleCloseWarn} />}
+            {/* {warn && <FormMessageBlock message={warn} type='warning' onClose={handleCloseWarn} />} */}
+            <div className={styles.foodGrid}>
+                {filteredFoodItems?.map((item) => (
+                    <FoodCard
+                        key={item.id}
+                        id={item.id}
+                        name={item.name}
+                        description={item.description}
+                        price={item.price}
+                        count={item.count}
+                        img={item.img}
+                        category_name={item.category_name}
+                        onAddToCart={handleAddToCart}
+                    />
+                ))}
+            </div>
+            {/* </PageLayout> */}
         </>
     );
 }
