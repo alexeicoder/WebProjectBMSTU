@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 import { OrderRepository } from '../repositories/order.repository';
 // import jwt from 'jsonwebtoken';
 import axios, { AxiosError } from "axios";
-import { IFood } from "../interfaces/order.interfaces";
+import { IFood, IOrderItem } from "../interfaces/order.interfaces";
 
 export class OrderController {
 
@@ -51,6 +51,24 @@ export class OrderController {
         try {
 
             const orders = await this.orderRepository.findByOwnerId(ownerId);
+
+            for (const order of orders) {
+                if (order.order_items as IOrderItem[]) {
+                    for (const orderItem of order.order_items) {
+                        try {
+                            const foodItemResponse = await axios.get(`http://192.168.0.15:3200/api/food/find/id/${orderItem.id_food_item}`);
+                            const foodItemData = foodItemResponse.data;
+                            orderItem.name = foodItemData.name;
+                            orderItem.img = foodItemData.img;
+                        } catch (foodError) {
+                            console.error(`Error fetching food item ${orderItem.id_food_item}:`, foodError);
+                            // Handle the error appropriately, e.g., set default values or remove the item
+                            orderItem.name = "Product not found";
+                            orderItem.img = "";
+                        }
+                    }
+                }
+            }
 
             return res.status(200).json({
                 count: orders.length,
@@ -107,8 +125,6 @@ export class OrderController {
         const ownerId: number = parseInt(req.body.ownerId);
         const foodItems: IFood[] = req.body.foodItems;
 
-        console.log(foodItems)
-
         if (!ownerId) {
             return res.status(400).json({ message: 'Owner ID is required' });
         }
@@ -118,6 +134,8 @@ export class OrderController {
             || !Array.isArray(foodItems)) {
             return res.status(400).json({ message: 'Food items are required' });
         }
+
+        console.log(foodItems);
 
         try {
             const ownerExists = await axios.get('http://192.168.0.15:3000/api/auth/exists/user/' + ownerId);

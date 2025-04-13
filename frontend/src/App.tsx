@@ -11,6 +11,7 @@ import Layout from './components/Layout/Layout';
 import AppLayout from './components/AppLayout/AppLayout';
 import HomePage from './pages/HomePage/HomePage';
 import CartPage from './pages/CartPage/CartPage';
+import OrderPage from './pages/OrderPage/OrderPage';
 
 import { CartProvider } from './context/CartContext/CartContext';
 // import ProfilePage from './pages/ProfilePage/ProfilePage.jsx';
@@ -27,11 +28,10 @@ function App() {
             <Route path={ROUTES.SIGN_UP} element={<SignupPage />} />
           </Route>
           <Route element={<AppLayout />}>
-
             <Route path={ROUTES.HOME} element={<HomePage />} />
             <Route path={ROUTES.CART} element={<CartPage />} />
             <Route path={ROUTES.SETTINGS} element={<SettingsPage />} />
-
+            <Route path={ROUTES.ORDERS} element={<OrderPage />} />
           </Route>
           {/* <Route path={ROUTES.SETTINGS} element={<SettingsPage />} />
           <Route path={ROUTES.HOME} element={<HomePage />} /> */}

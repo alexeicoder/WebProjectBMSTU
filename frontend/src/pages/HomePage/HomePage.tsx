@@ -6,6 +6,7 @@ import Button from '../../components/Button/Button';
 import FoodCard from '../../components/FoodCard/FoodCard';
 import { useCart } from '../../context/CartContext/CartContext';
 import ModalMessage from '../../components/ModalMessage/ModalMessage';
+import PageLayout from '../../components/PageLayout/PageLayout';
 
 interface FoodItem {
     id: number;
@@ -113,9 +114,9 @@ function HomePage() {
 
     if (error) {
         return (
-            // <PageLayout>
-            <FormMessageBlock message={error} type='error' />
-            // </PageLayout>
+            <PageLayout>
+                <FormMessageBlock message={error} type='error' />
+            </PageLayout>
         );
     }
 

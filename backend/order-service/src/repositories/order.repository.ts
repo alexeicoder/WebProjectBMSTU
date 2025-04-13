@@ -12,8 +12,18 @@ export class OrderRepository {
     }
 
     public async findByOwnerId(ownerId: number): Promise<IOrder[]> {
-        const result = await this.db.query(`SELECT * FROM orders WHERE user_id = $1`, [ownerId]);
-        return result.rows;
+        const result = await this.db.query<IOrder>(`SELECT * FROM orders WHERE user_id = $1`, [ownerId]);
+        const orders = result.rows;
+
+        for (const order of orders) {
+            const orderItemsResult = await this.db.query<IOrderItem>(
+                `SELECT id_food_item, count, price FROM order_items WHERE id_order = $1`,
+                [order.id]
+            );
+            order.order_items = orderItemsResult.rows;
+        }
+
+        return orders;
     }
 
     public async findByOwnerLogin(login: string): Promise<IOrder[]> {
@@ -23,11 +33,16 @@ export class OrderRepository {
 
     public async createOrder(ownerId: number, foodItems: IFood[]): Promise<IOrder> {
         const client = await this.db.getClient();
+
+        console.log("Foods", foodItems);
+
         try {
             await client.query('BEGIN');
 
             // Calculate total price
-            const totalPrice = foodItems.reduce((sum, item) => sum + item.price, 0);
+            const totalPrice = foodItems.reduce((sum, item) => sum + (item.price * item.count), 0);
+
+            // console.log("totalPrice", totalPrice);
 
             // Create order
             const orderResult = await client.query<IOrder>(
@@ -42,7 +57,7 @@ export class OrderRepository {
             for (const foodItem of foodItems) {
                 const orderItemResult = await client.query<IOrderItem>(
                     `INSERT INTO order_items (id_order, id_food_item, count, price) VALUES ($1, $2, $3, $4) RETURNING *`,
-                    [order.id, foodItem.id, 1, foodItem.price] // Assuming quantity is always 1 for now
+                    [order.id, foodItem.id, foodItem.count, foodItem.price] // Assuming quantity is always 1 for now
                 );
                 orderItems.push(orderItemResult.rows[0]);
             }

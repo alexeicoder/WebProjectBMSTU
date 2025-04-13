@@ -1,0 +1,14 @@
+/* OrderPage.module.css */
+.orderPage {
+    padding: 20px;
+    color: var(--fgColor-default);
+}
+
+.orderList {
+    list-style: none;
+    padding: 0;
+}
+
+div {
+    color: var(--fgColor-default);
+}

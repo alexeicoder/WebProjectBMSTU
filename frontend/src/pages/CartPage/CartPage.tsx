@@ -3,6 +3,11 @@ import { useCart } from '../../context/CartContext/CartContext';
 import { getImgSrc } from '../../utils/utils';
 import styles from './CartPage.module.css';
 import Button from '../../components/Button/Button';
+import { ROUTES } from '../../routes/routes';
+
+import { FiPlus, FiMinus } from 'react-icons/fi';
+import PageLayout from '../../components/PageLayout/PageLayout';
+import FormMessageBlock from '../../components/FormMessageBlock/FormMessageBlock';
 
 interface FoodItem {
     id: number;
@@ -16,10 +21,11 @@ interface FoodItem {
 }
 
 const CartPage: React.FC = () => {
-    const { cart, updateCartItemQuantity, clearCart } = useCart();
+    const { cart, updateCartItemQuantity, clearCart, removeFromCart } = useCart(); // Get removeFromCart
     const [foodItems, setFoodItems] = useState<FoodItem[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
+    const [userId, setUserId] = useState<number | null>(null);
 
     useEffect(() => {
         const fetchFoodItems = async () => {
@@ -41,8 +47,34 @@ const CartPage: React.FC = () => {
         fetchFoodItems();
     }, []);
 
+    useEffect(() => {
+        const fetchUserId = async () => {
+            try {
+                const validateResponse = await fetch('http://192.168.0.15:3000/api/auth/validateToken', {
+                    method: 'GET',
+                    credentials: 'include',
+                });
+
+                if (!validateResponse.ok) {
+                    throw new Error('Не удалось проверить токен. Пожалуйста, войдите снова.');
+                }
+
+                const validateResponseData = await validateResponse.json();
+                setUserId(validateResponseData.userId);
+            } catch (err) {
+                setError(err instanceof Error ? err.message : 'Failed to fetch user ID.');
+            }
+        };
+
+        fetchUserId();
+    }, []);
+
     const handleQuantityChange = (productId: number, newQuantity: number) => {
         updateCartItemQuantity(productId, newQuantity);
+    };
+
+    const handleRemoveFromCart = (productId: number) => {
+        removeFromCart(productId);
     };
 
     const getFoodItemById = (productId: number) => {
@@ -50,6 +82,10 @@ const CartPage: React.FC = () => {
     };
 
     const handlePlaceOrder = async () => {
+        if (!userId) {
+            setError('User ID not found. Please log in again.');
+            return;
+        }
         setIsLoading(true);
         setError(null);
         try {
@@ -67,12 +103,14 @@ const CartPage: React.FC = () => {
             });
 
             const orderData = {
-                ownerId: 1, // Replace with the actual user ID
+                ownerId: userId,
                 foodItems: orderItems,
             };
 
+            console.log(orderData);
+
             // Simulate the request to the backend
-            const response = await fetch('http://192.168.0.15:3200/api/order/create', {
+            const response = await fetch('http://192.168.0.15:3100/api/order/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -81,12 +119,14 @@ const CartPage: React.FC = () => {
             });
 
             if (!response.ok) {
-                throw new Error('Failed to place order');
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to place order');
             }
 
             // Handle successful order placement
             console.log('Order placed successfully');
             clearCart();
+            window.location.href = ROUTES.ORDERS;
             // You might want to redirect the user to a confirmation page here
         } catch (err) {
             setError(err instanceof Error ? err.message : 'An unexpected error occurred.');
@@ -94,6 +134,14 @@ const CartPage: React.FC = () => {
             setIsLoading(false);
         }
     };
+
+    if (error) {
+        return (
+            <PageLayout>
+                <FormMessageBlock message={error} type='error' />
+            </PageLayout>
+        );
+    }
 
     return (
         <>
@@ -111,14 +159,21 @@ const CartPage: React.FC = () => {
                                 }
                                 return (
                                     <li key={cartItem.productId} className={styles.cartItem}>
-                                        <img src={getImgSrc(foodItem.name)} alt={foodItem.name} className={styles.cartItemImage} />
+                                        <div className={styles.cartItemImageContainer}>
+                                            <img src={getImgSrc(foodItem.name)} alt={foodItem.name} className={styles.cartItemImage} />
+                                            <Button onClick={() => handleRemoveFromCart(cartItem.productId)}>Удалить</Button>
+                                        </div>
                                         <div className={styles.cartItemInfo}>
                                             <h3 className={styles.cartItemName}>{foodItem.name}</h3>
-                                            <p className={styles.cartItemPrice}>Цена: {foodItem.price}</p>
+                                            <p className={styles.cartItemPrice}>Цена: {foodItem.price}₽</p>
                                             <div className={styles.quantityControl}>
-                                                <button onClick={() => handleQuantityChange(cartItem.productId, cartItem.quantity - 1)} disabled={cartItem.quantity <= 1}>-</button>
+                                                <Button onClick={() => handleQuantityChange(cartItem.productId, cartItem.quantity - 1)} disabled={cartItem.quantity <= 1}>
+                                                    <FiMinus />
+                                                </Button>
                                                 <span>{cartItem.quantity}</span>
-                                                <button onClick={() => handleQuantityChange(cartItem.productId, cartItem.quantity + 1)} disabled={cartItem.quantity >= foodItem.count}>+</button>
+                                                <Button onClick={() => handleQuantityChange(cartItem.productId, cartItem.quantity + 1)} disabled={cartItem.quantity >= foodItem.count}>
+                                                    <FiPlus />
+                                                </Button>
                                             </div>
                                         </div>
                                     </li>

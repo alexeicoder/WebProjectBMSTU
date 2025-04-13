@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './AddToCart.module.css';
 import Button from '../Button/Button';
+import { FiPlus, FiMinus } from 'react-icons/fi';
 
 interface AddToCartProps {
     productId: number;
@@ -45,13 +46,13 @@ const AddToCart: React.FC<AddToCartProps> = ({ productId, productName, count, on
     return (
         <div className={styles.addToCart}>
             <div className={styles.quantityControl}>
-                <button onClick={handleDecrement} disabled={quantity <= 1}>
-                    -
-                </button>
+                <Button onClick={handleDecrement} disabled={quantity <= 1}>
+                    <FiMinus />
+                </Button>
                 <span>{quantity}</span>
-                <button onClick={handleIncrement} disabled={quantity >= count}>
-                    +
-                </button>
+                <Button onClick={handleIncrement} disabled={quantity >= count}>
+                    <FiPlus />
+                </Button>
             </div>
             <Button onClick={handleAddToCartClick} className={'signinBtn'}>
                 В корзину

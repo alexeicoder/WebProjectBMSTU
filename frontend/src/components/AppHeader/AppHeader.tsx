@@ -41,6 +41,9 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({ className }) => {
                 <Link to={ROUTES.CART} className={styles.appHeaderOption}>
                     <span>Корзина {cartItemCount > 0 && `(${cartItemCount})`}</span>
                 </Link>
+                <Link to={ROUTES.ORDERS} className={styles.appHeaderOption}>
+                    <span>Заказы</span>
+                </Link>
                 <Link to={ROUTES.SETTINGS} className={styles.appHeaderOption}>
                     <span>Настройки</span>
                 </Link>

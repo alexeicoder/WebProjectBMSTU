@@ -24,8 +24,8 @@ const FoodCard: React.FC<FoodCardProps> = ({ id, name, description, price, count
                 </div>
                 <h3 className={styles.foodName}>{name}</h3>
                 <p className={styles.foodDescription}>{description}</p>
-                <p className={styles.foodPrice}>Цена: {price}</p>
-                <p className={styles.foodCount}>Количество: {count}</p>
+                <p className={styles.foodPrice}>Цена: {price}₽</p>
+                {/* <p className={styles.foodCount}>Количество: {count}</p> */}
                 <AddToCart productId={id} productName={name} count={count} onAddToCart={onAddToCart} />
             </div>
         </div>

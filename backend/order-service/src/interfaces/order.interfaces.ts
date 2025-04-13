@@ -12,6 +12,8 @@ export interface IOrderItem {
     id: number;
     id_order: number;
     id_food_item: number;
+    name?: string;
+    img?: string;
     count: number;
     price: number;
 }

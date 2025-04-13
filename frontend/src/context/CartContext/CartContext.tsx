@@ -1,3 +1,4 @@
+// frontend/src/context/CartContext/CartContext.tsx
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 
 interface CartItem {
@@ -10,6 +11,7 @@ interface CartContextProps {
     addToCart: (productId: number, quantity: number) => void;
     updateCartItemQuantity: (productId: number, quantity: number) => void;
     clearCart: () => void;
+    removeFromCart: (productId: number) => void; // Add removeFromCart
 }
 
 const CartContext = createContext<CartContextProps | undefined>(undefined);
@@ -57,11 +59,16 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         localStorage.removeItem(CART_STORAGE_KEY);
     };
 
+    const removeFromCart = (productId: number) => {
+        setCart(cart.filter((item) => item.productId !== productId));
+    };
+
     const contextValue: CartContextProps = {
         cart,
         addToCart,
         updateCartItemQuantity,
         clearCart,
+        removeFromCart, // Add removeFromCart to the context value
     };
 
     return (
