@@ -7,6 +7,13 @@ export interface IFood {
     price: number;
     description?: string;
     img?: string;
+    id_category: number;
+    category_name: string;
+}
+
+export interface IFoodCategory {
+    id: number;
+    name: string;
 }
 
 export interface IFoodRequest extends Request {

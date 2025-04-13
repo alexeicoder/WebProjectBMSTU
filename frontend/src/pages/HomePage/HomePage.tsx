@@ -5,6 +5,9 @@ import { useEffect, useState } from 'react';
 import PageLayout from '../../components/PageLayout/PageLayout';
 import styles from './HomePage.module.css';
 import FormMessageBlock from '../../components/FormMessageBlock/FormMessageBlock';
+import Button from '../../components/Button/Button';
+import { getImgSrc } from '../../utils/utils';
+import FoodCard from '../../components/FoodCard/FoodCard';
 
 interface FoodItem {
     id: number;
@@ -13,12 +16,21 @@ interface FoodItem {
     price: number;
     description: string;
     img: string;
+    id_category: number; // Add id_category
+    category_name: string;
+}
+
+interface Category {
+    id: number;
+    name: string;
 }
 
 function HomePage() {
-    const [foodItems, setFoodItems] = useState<FoodItem[] | null>(null); // Changed initial state to null
+    const [foodItems, setFoodItems] = useState<FoodItem[] | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -31,60 +43,95 @@ function HomePage() {
                 }
                 const data = await response.json();
 
-                // Check if data is an array before setting the state
-                console.log(data)
                 if (Array.isArray(data.foodItems)) {
                     setFoodItems(data.foodItems);
                 } else {
                     throw new Error('Data received is not an array');
                 }
             } catch (err) {
-                // setError(err instanceof Error ? err.message : 'An unexpected error occurred.');
-                setError("Не удалось загрузить список продуктов. Мы уже работает над этим. Попробуйте повторить запрос позже.");
-                setFoodItems([]); // Set to empty array on error
+                setError(err instanceof Error ? err.message : 'An unexpected error occurred.');
+                setFoodItems([]);
             } finally {
                 setIsLoading(false);
             }
         };
+
+        const fetchCategories = async () => {
+            try {
+                const response = await fetch('http://192.168.0.15:3200/api/food/category/all'); // Replace with your actual endpoint
+                if (!response.ok) {
+                    throw new Error('Failed to fetch categories');
+                }
+                const data = await response.json();
+                setCategories(data.foodCategories);
+            } catch (err) {
+                console.error('Error fetching categories:', err);
+            }
+        };
+
         fetchData();
+        fetchCategories();
     }, []);
+
+    const handleCategoryClick = (categoryId: number | null) => {
+        setSelectedCategory(categoryId);
+    };
+
+    const filteredFoodItems = selectedCategory
+        ? foodItems?.filter((item) => item.id_category === selectedCategory)
+        : foodItems;
 
     if (isLoading) {
         return <div>Загрузка...</div>;
     }
 
     if (error) {
-        // return <div>Ошибка: {error}</div>;
         return (
-            <>
-                <PageLayout>
-                    <FormMessageBlock message={error} type='error' />
-                </PageLayout>
-            </>
-        )
+            <PageLayout>
+                <FormMessageBlock message={error} type='error' />
+            </PageLayout>
+        );
     }
 
-    // Check if foodItems is null before mapping
     if (!foodItems) {
         return <div>Загрузка...</div>;
     }
 
     return (
-        <PageLayout>
-            <div className={styles.foodGrid}>
-                {foodItems.map((item) => (
-                    <div key={item.id} className={styles.foodCard}>
-                        <img src={item.img} alt={item.name} className={styles.foodImage} />
-                        <div className={styles.foodInfo}>
-                            <h3 className={styles.foodName}>{item.name}</h3>
-                            <p className={styles.foodDescription}>{item.description}</p>
-                            <p className={styles.foodPrice}>Цена: {item.price}</p>
-                            {/* <p className={styles.foodCount}>Count: {item.count}</p> */}
-                        </div>
-                    </div>
+        <>
+
+            <div className={styles.categoryButtons}>
+                <Button
+                    className={`${styles.categoryButton} ${selectedCategory === null ? styles.active : ''}`}
+                    onClick={() => handleCategoryClick(null)}
+                >
+                    Все
+                </Button>
+                {categories.map((category) => (
+                    <Button
+                        key={category.id}
+                        className={`${styles.categoryButton} ${selectedCategory === category.id ? styles.active : ''}`}
+                        onClick={() => handleCategoryClick(category.id)}
+                    >
+                        {category.name}
+                    </Button>
                 ))}
             </div>
-        </PageLayout>
+            <PageLayout>
+                <div className={styles.foodGrid}>
+                    {filteredFoodItems?.map((item) => (
+                        <FoodCard
+                            key={item.id}
+                            id={item.id}
+                            name={item.name}
+                            description={item.description}
+                            price={item.price}
+                            category_name={item.category_name}
+                        />
+                    ))}
+                </div>
+            </PageLayout>
+        </>
     );
 }
 

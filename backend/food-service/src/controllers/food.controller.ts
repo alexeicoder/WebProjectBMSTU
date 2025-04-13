@@ -9,7 +9,7 @@ export class FoodController {
     constructor(private foodRepository: FoodRepository) { }
 
     // Methods
-    public async getAllFoods(_req: Request, res: Response): Promise<any> {
+    public async getAllFood(_req: Request, res: Response): Promise<any> {
 
         try {
             const food_items = this.foodRepository.getAllFood();
@@ -21,6 +21,21 @@ export class FoodController {
 
         } catch (error) {
             console.error('Ошибка при получении списка продуктов:', error);
+            return res.status(500).json({ message: 'Ошибка сервера.' });
+        }
+    }
+
+    public async getAllFoodCategories(_req: Request, res: Response): Promise<any> {
+        try {
+            const food_categories = this.foodRepository.getAllFoodCategories();
+
+            return res.status(200).json({
+                count: (await food_categories).length,
+                foodCategories: (await food_categories)
+            });
+
+        } catch (error) {
+            console.error('Ошибка при получении списка категорий продуктов:', error);
             return res.status(500).json({ message: 'Ошибка сервера.' });
         }
     }

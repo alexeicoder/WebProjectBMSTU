@@ -9,7 +9,11 @@ router.get('/', (_req: Request, res: Response) => {
 });
 
 router.get('/all', (req: Request, res: Response) => {
-    Container.getFoodController().getAllFoods(req, res);
+    Container.getFoodController().getAllFood(req, res);
+})
+
+router.get('/category/all', (req: Request, res: Response) => {
+    Container.getFoodController().getAllFoodCategories(req, res);
 })
 
 router.get('/find/id/:id', (req: Request, res: Response) => {
