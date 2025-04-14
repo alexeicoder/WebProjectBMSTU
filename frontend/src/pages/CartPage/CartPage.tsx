@@ -44,7 +44,10 @@ const CartPage: React.FC = () => {
                 const data = await response.json();
                 setFoodItems(data.foodItems);
             } catch (err) {
-                setError(err instanceof Error ? err.message : 'An unexpected error occurred.');
+                if (err instanceof Error && err.message === 'Failed to fetch') {
+                    setError('Не удалось загрузить данные о продуктах. Сервер недоступен. Попробуйте позже.');
+                }
+                // setError(err instanceof Error ? err.message : 'An unexpected error occurred.');
             } finally {
                 setIsLoading(false);
             }
@@ -80,6 +83,9 @@ const CartPage: React.FC = () => {
                     setUserId(validateResponseData.userId);
                 }
             } catch (err) {
+                if (err instanceof Error && err.message === 'Failed to fetch') {
+                    setError('Сервер недоступен. Попробуйте позже.');
+                }
                 setError(err instanceof Error ? err.message : 'Failed to fetch user ID.');
             }
         };
@@ -147,7 +153,10 @@ const CartPage: React.FC = () => {
             window.location.href = ROUTES.ORDERS;
             // You might want to redirect the user to a confirmation page here
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'An unexpected error occurred.');
+
+            if (err instanceof Error && err.message === 'Failed to fetch') {
+                setError('Не удалось создать заказ. Сервер недоступен. Попробуйте позже.');
+            }
         } finally {
             setIsLoading(false);
         }

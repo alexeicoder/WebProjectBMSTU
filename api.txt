@@ -1,16 +1,16 @@
 1 - auth-service:
 	APP_PORT=3000
-	APP_HOST=192.168.0.15
+	APP_HOST=localhost
 	DB_NAME=user_service
 
 2 - order-service:
 	APP_PORT=3100
-	APP_HOST=192.168.0.15
+	APP_HOST=localhost
 	DB_NAME=order_service
 
 3 - food-service:
 	APP_PORT=3200
-	APP_HOST=192.168.0.15
+	APP_HOST=localhost
 	DB_NAME=food_service
 
 1. в food-service

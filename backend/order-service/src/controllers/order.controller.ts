@@ -56,7 +56,7 @@ export class OrderController {
                 if (order.order_items as IOrderItem[]) {
                     for (const orderItem of order.order_items) {
                         try {
-                            const foodItemResponse = await axios.get(`http://192.168.0.15:3200/api/food/find/id/${orderItem.id_food_item}`);
+                            const foodItemResponse = await axios.get(`http://localhost:3200/api/food/find/id/${orderItem.id_food_item}`);
                             const foodItemData = foodItemResponse.data;
                             orderItem.name = foodItemData.name;
                             orderItem.img = foodItemData.img;
@@ -91,7 +91,7 @@ export class OrderController {
         }
 
         try {
-            const user = await axios.get('http://192.168.0.15:3000/api/auth/find/user/login/' + ownerLogin);
+            const user = await axios.get('http://localhost:3000/api/auth/find/user/login/' + ownerLogin);
 
             if (user.status === 404) {
                 return res.status(404).json({ message: `This order's owner not found` });
@@ -138,7 +138,7 @@ export class OrderController {
         console.log(foodItems);
 
         try {
-            const ownerExists = await axios.get('http://192.168.0.15:3000/api/auth/exists/user/' + ownerId);
+            const ownerExists = await axios.get('http://localhost:3000/api/auth/exists/user/' + ownerId);
 
             if (ownerExists.data.exists === false) {
                 return res.status(404).json({ message: 'Owner not found' });

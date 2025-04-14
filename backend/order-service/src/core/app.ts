@@ -22,7 +22,7 @@ class App {
         app.use(bodyParser.json());
         app.use(cors(
             {
-                origin: 'http://192.168.0.15:4000', // Разрешить запросы с любых доменов
+                origin: 'http://localhost:4000', // Разрешить запросы с любых доменов
                 methods: ['GET', 'POST', 'PUT', 'DELETE'], // Разрешенные HTTP-методы
                 credentials: true, // Разрешить отправку учётных данных
                 // withCredentials: true

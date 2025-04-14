@@ -52,6 +52,10 @@ function HomePage() {
                     throw new Error('Data received is not an array');
                 }
             } catch (err) {
+
+                if (err instanceof Error && err.message === 'Failed to fetch') {
+                    setError('Не удалось загрузить данные. Сервер недоступен. Попробуйте позже.');
+                }
                 setError(err instanceof Error ? err.message : 'An unexpected error occurred.');
                 setFoodItems([]);
             } finally {
@@ -69,6 +73,9 @@ function HomePage() {
                 setCategories(data.foodCategories);
             } catch (err) {
                 console.error('Error fetching categories:', err);
+                if (err instanceof Error && err.message === 'Failed to fetch') {
+                    setError('Не удалось загрузить данные. Сервер недоступен. Попробуйте позже.');
+                }
             }
         };
 

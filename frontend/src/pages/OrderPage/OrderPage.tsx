@@ -89,7 +89,9 @@ const OrderPage: React.FC = () => {
                 const data = await response.json();
                 setOrders(data.orders);
             } catch (err) {
-                setError(err instanceof Error ? err.message : 'An unexpected error occurred.');
+                if (err instanceof Error && err.message === 'Failed to fetch') {
+                    setError('Не удалось загрузить данные. Сервер недоступен. Попробуйте позже');
+                }
             } finally {
                 setIsLoading(false);
             }
