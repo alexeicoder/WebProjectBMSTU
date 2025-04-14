@@ -1,10 +1,13 @@
-// import { env } from 'node:process';
 import express from "express";
 import { createServer, Server } from "http";
 import router from "../routes/routes";
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
+const swaggerDocument = YAML.load('./doc/swagger.yaml');
 
 class App {
     private port: number = process.env.APP_PORT as unknown as number;
@@ -26,11 +29,11 @@ class App {
                 origin: 'http://localhost:4000',
                 methods: ['GET', 'POST', 'PUT', 'DELETE'], // Разрешенные HTTP-методы
                 credentials: true, // Разрешить отправку учётных данных
-                // withCredentials: true
             }
         ));
         app.use(cookieParser());
         app.use("/api/auth/", router);
+        app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
         return app;
     }

@@ -15,6 +15,7 @@ async function startServer() {
         Container.init(database);
 
         const app = new App();
+
         app.start();
 
     } catch (error) {

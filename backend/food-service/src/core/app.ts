@@ -1,10 +1,12 @@
-// import { env } from 'node:process';
 import express from "express";
 import { createServer, Server } from "http";
 import router from "../routes/routes";
 import bodyParser from 'body-parser';
 import cors from 'cors';
-// import cookieParser from 'cookie-parser';
+
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
+const swaggerDocument = YAML.load('./doc/swagger.yaml');
 
 class App {
     private port: number = process.env.APP_PORT as unknown as number;
@@ -29,23 +31,13 @@ class App {
                 // withCredentials: true
             }
         ));
-        // app.use(cookieParser());
         app.use("/api/food/", router);
+        app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
         return app;
     }
 
     public async start(): Promise<void> {
-        // Starting database
-        // try {
-        //     await this.database.connect();
-        //     const isConnected = await this.database.checkConnection();
-        //     if (!isConnected) throw new Error('Database connection failed');
-        // } catch (error) {
-        //     console.error('Failed to start database:', error);
-        //     process.exit(1);
-        // }
-        // Starting server
         this.server.listen(this.port, this.host, () => {
             console.log(`Food server is running on url http://${this.host}:${this.port}/api/food`)
         });

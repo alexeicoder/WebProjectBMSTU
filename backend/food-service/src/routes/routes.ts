@@ -24,12 +24,4 @@ router.get('/find/name/:name', (req: Request, res: Response) => {
     Container.getFoodController().findByName(req, res);
 })
 
-// router.get('/data/:id', (req: Request, res: Response) => {
-//     Container.getFoodController().findById(req, res);
-// })
-
-// router.get('/validatetoken', verifyToken, (req: IAuthRequest, res: Response) => {
-//     Container.getAuthController().validateToken(req, res);
-// })
-
 export default router;
