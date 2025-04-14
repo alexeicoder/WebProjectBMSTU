@@ -24,6 +24,10 @@ router.get('/validatetoken', verifyToken, (req: IAuthRequest, res: Response) => 
     Container.getAuthController().validateToken(req, res);
 })
 
+router.get('/refresh', (req: IAuthRequest, res: Response) => {
+    Container.getAuthController().refreshToken(req, res);
+})
+
 router.get('/find/user/id/:id', (req: Request, res: Response) => {
     Container.getAuthController().findById(req, res);
 })

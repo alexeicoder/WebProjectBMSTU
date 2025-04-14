@@ -7,6 +7,7 @@ import FoodCard from '../../components/FoodCard/FoodCard';
 import { useCart } from '../../context/CartContext/CartContext';
 import ModalMessage from '../../components/ModalMessage/ModalMessage';
 import PageLayout from '../../components/PageLayout/PageLayout';
+import { SERVICE_FOOD } from '../../routes/routes';
 
 interface FoodItem {
     id: number;
@@ -39,7 +40,7 @@ function HomePage() {
             setIsLoading(true);
             setError(null);
             try {
-                const response = await fetch('http://192.168.0.15:3200/api/food/all');
+                const response = await fetch(SERVICE_FOOD.FIND_ALL);
                 if (!response.ok) {
                     throw new Error('Не удалось загрузить список продуктов. Попробуйте позже');
                 }
@@ -60,7 +61,7 @@ function HomePage() {
 
         const fetchCategories = async () => {
             try {
-                const response = await fetch('http://192.168.0.15:3200/api/food/category/all');
+                const response = await fetch(SERVICE_FOOD.FIND_CATEGORY_ALL);
                 if (!response.ok) {
                     throw new Error('Failed to fetch categories');
                 }

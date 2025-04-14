@@ -28,6 +28,8 @@ export class AuthController {
     public async refreshToken(req: Request, res: Response): Promise<any> {
         const refreshToken = req.cookies.refresh_cookie;
 
+        console.log(refreshToken);
+
         if (!refreshToken) {
             return res.status(400).json({
                 success: false,
@@ -37,7 +39,10 @@ export class AuthController {
 
         try {
             const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET!) as { userId: number };
-            const newAccessToken = this.generateTokens(decoded.userId).accessToken;
+
+            const decodedUserId = decoded.userId;
+
+            const newAccessToken = this.generateTokens(decodedUserId).accessToken;
 
             res.cookie('access_cookie', newAccessToken, {
                 httpOnly: true,
@@ -48,7 +53,8 @@ export class AuthController {
 
             return res.status(200).json({
                 success: true,
-                message: 'Access token refreshed'
+                message: 'Access token refreshed',
+                userId: decodedUserId
             });
         } catch (error) {
             return res.status(401).json({

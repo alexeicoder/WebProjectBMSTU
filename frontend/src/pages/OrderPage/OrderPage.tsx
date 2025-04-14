@@ -4,6 +4,7 @@ import { useCart } from '../../context/CartContext/CartContext';
 import OrderCard from '../../components/OrderCard/OrderCard';
 import PageLayout from '../../components/PageLayout/PageLayout';
 import FormMessageBlock from '../../components/FormMessageBlock/FormMessageBlock';
+import { SERVICE_AUTH, SERVICE_ORDER } from '../../routes/routes';
 
 interface IOrderItem {
     id: number;
@@ -35,17 +36,28 @@ const OrderPage: React.FC = () => {
     useEffect(() => {
         const fetchUserId = async () => {
             try {
-                const validateResponse = await fetch('http://192.168.0.15:3000/api/auth/validatetoken', {
+                const validateResponse = await fetch(SERVICE_AUTH.VALIDATE_TOKEN, {
                     method: 'GET',
                     credentials: 'include',
                 });
 
                 if (!validateResponse.ok) {
-                    throw new Error('Не удалось проверить токен. Пожалуйста, войдите снова.');
+                    const tryToRefreshToken = await fetch(SERVICE_AUTH.REFRESH_TOKEN, {
+                        method: 'GET',
+                        credentials: 'include',
+                    });
+
+                    if (!tryToRefreshToken.ok) {
+                        throw new Error('Не удалось проверить токен. Пожалуйста, войдите снова.');
+                    }
+
+                    const tryToRefreshTokenData = await tryToRefreshToken.json();
+                    setUserId(tryToRefreshTokenData.userId);
+                } else {
+                    const validateResponseData = await validateResponse.json();
+                    setUserId(validateResponseData.userId);
                 }
 
-                const validateResponseData = await validateResponse.json();
-                setUserId(validateResponseData.userId);
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'Failed to fetch user ID.');
             }
@@ -62,7 +74,7 @@ const OrderPage: React.FC = () => {
             setIsLoading(true);
             setError(null);
             try {
-                const response = await fetch(`http://192.168.0.15:3100/api/order/find/owner/id/${userId}`);
+                const response = await fetch(SERVICE_ORDER.FIND_OWNER_ID + userId);
                 if (!response.ok) {
                     throw new Error('Failed to fetch orders');
                 }

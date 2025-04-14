@@ -6,7 +6,7 @@ import styles from './SettingsPage.module.css';
 import Label from '../../components/Label/Label';
 import FormElement from '../../components/FormElement/FormElement';
 import Checkbox from '../../components/Checkbox/Checkbox';
-import { ROUTES } from '../../routes/routes';
+import { ROUTES, SERVICE_AUTH } from '../../routes/routes';
 import FormMessageBlock from '../../components/FormMessageBlock/FormMessageBlock';
 import PageLayout from '../../components/PageLayout/PageLayout';
 
@@ -32,22 +32,46 @@ const SettingsPage: React.FC = () => {
       setError(null);
       try {
         // First, validate token to get userId
-        const validateResponse = await fetch('http://192.168.0.15:3000/api/auth/validateToken', {
+        const validateResponse = await fetch(SERVICE_AUTH.VALIDATE_TOKEN, {
           method: 'GET',
           credentials: 'include', // This sends cookies
         });
 
         if (!validateResponse.ok) {
-          throw new Error('Не удалось проверить токен. Пожалуйста, войдите снова.');
+          const tryToRefreshToken = await fetch(SERVICE_AUTH.REFRESH_TOKEN, {
+            method: 'GET',
+            credentials: 'include',
+          });
+
+          if (!tryToRefreshToken.ok) {
+            throw new Error('Не удалось проверить токен. Пожалуйста, войдите снова.');
+          }
+
+          const tryToRefreshTokenData = await tryToRefreshToken.json();
+          setUserId(tryToRefreshTokenData.userId);
         }
+        else {
+          const validateResponseData = await validateResponse.json();
+          setUserId(validateResponseData.userId);
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load user data.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-        const validateResponseData = await validateResponse.json();
+    fetchUserId();
+  }, []);
 
-        const userId = validateResponseData.userId;
-        setUserId(userId);
-
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!userId) return;
+      setIsLoading(true);
+      setError(null);
+      try {
         // Then fetch user data
-        const userResponse = await fetch(`http://192.168.0.15:3000/api/auth/find/user/id/${userId}`);
+        const userResponse = await fetch(SERVICE_AUTH.FIND_USER_ID + userId);
         if (!userResponse.ok) {
           throw new Error('Не удалось загрузить данные о пользователе. Войдите снова.');
         }
@@ -59,9 +83,8 @@ const SettingsPage: React.FC = () => {
         setIsLoading(false);
       }
     };
-
-    fetchUserId();
-  }, []);
+    fetchUserData();
+  }, [userId]);
 
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -91,7 +114,7 @@ const SettingsPage: React.FC = () => {
         login: userData.login,
         password: changePassword ? userData.password : undefined,
       };
-      const response = await fetch(`http://192.168.0.15:3000/api/auth/update/${userId}`, {
+      const response = await fetch(SERVICE_AUTH.UPDATE + userId, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -126,7 +149,7 @@ const SettingsPage: React.FC = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch(`http://192.168.0.15:3000/api/auth/delete/${userId}`, {
+      const response = await fetch(SERVICE_AUTH.DELETE + userId, {
         method: 'DELETE',
         credentials: 'include',
       });
@@ -198,7 +221,7 @@ const SettingsPage: React.FC = () => {
               onChange={handleInputChange}
             />
           ) : (
-            <Input name="name" value={userData.name} disabled={true} />
+            <Input id="name" name="name" value={userData.name} disabled={true} />
           )}
         </FormElement>
         <FormElement>
@@ -212,7 +235,7 @@ const SettingsPage: React.FC = () => {
               onChange={handleInputChange}
             />
           ) : (
-            <Input name="login" value={userData.login} disabled={true} />
+            <Input id="login" name="login" value={userData.login} disabled={true} />
           )}
         </FormElement>
         {isEditing && (

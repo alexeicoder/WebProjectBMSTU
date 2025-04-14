@@ -8,11 +8,11 @@ router.get('/', (_req: Request, res: Response) => {
     res.send('Welcome to Food Service API');
 });
 
-router.get('/all', (req: Request, res: Response) => {
+router.get('/find/all', (req: Request, res: Response) => {
     Container.getFoodController().getAllFood(req, res);
 })
 
-router.get('/category/all', (req: Request, res: Response) => {
+router.get('/find/category/all', (req: Request, res: Response) => {
     Container.getFoodController().getAllFoodCategories(req, res);
 })
 

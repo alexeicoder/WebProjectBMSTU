@@ -3,7 +3,7 @@ import { useCart } from '../../context/CartContext/CartContext';
 import { getImgSrc } from '../../utils/utils';
 import styles from './CartPage.module.css';
 import Button from '../../components/Button/Button';
-import { ROUTES } from '../../routes/routes';
+import { ROUTES, SERVICE_AUTH, SERVICE_FOOD, SERVICE_ORDER } from '../../routes/routes';
 
 import { FiPlus, FiMinus } from 'react-icons/fi';
 import PageLayout from '../../components/PageLayout/PageLayout';
@@ -32,7 +32,7 @@ const CartPage: React.FC = () => {
             setIsLoading(true);
             setError(null);
             try {
-                const response = await fetch('http://192.168.0.15:3200/api/food/all');
+                const response = await fetch(SERVICE_FOOD.FIND_ALL);
                 if (!response.ok) {
                     throw new Error('Failed to fetch food items');
                 }
@@ -50,17 +50,28 @@ const CartPage: React.FC = () => {
     useEffect(() => {
         const fetchUserId = async () => {
             try {
-                const validateResponse = await fetch('http://192.168.0.15:3000/api/auth/validateToken', {
+                const validateResponse = await fetch(SERVICE_AUTH.VALIDATE_TOKEN, {
                     method: 'GET',
                     credentials: 'include',
                 });
 
                 if (!validateResponse.ok) {
-                    throw new Error('Не удалось проверить токен. Пожалуйста, войдите снова.');
-                }
+                    const tryToRefreshToken = await fetch(SERVICE_AUTH.REFRESH_TOKEN, {
+                        method: 'GET',
+                        credentials: 'include',
+                    });
 
-                const validateResponseData = await validateResponse.json();
-                setUserId(validateResponseData.userId);
+                    if (!tryToRefreshToken.ok) {
+                        throw new Error('Не удалось проверить токен. Пожалуйста, войдите снова.');
+                    }
+
+                    const validateResponseData = await tryToRefreshToken.json();
+                    setUserId(validateResponseData.userId);
+                }
+                else {
+                    const validateResponseData = await validateResponse.json();
+                    setUserId(validateResponseData.userId);
+                }
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'Failed to fetch user ID.');
             }
@@ -110,7 +121,7 @@ const CartPage: React.FC = () => {
             console.log(orderData);
 
             // Simulate the request to the backend
-            const response = await fetch('http://192.168.0.15:3100/api/order/create', {
+            const response = await fetch(SERVICE_ORDER.CREATE, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
