@@ -32,7 +32,7 @@ class App {
             }
         ));
         app.use("/api/food/", router);
-        app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+        app.use('/api/food/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
         return app;
     }

@@ -31,7 +31,7 @@ class App {
             }
         ));
         app.use("/api/order/", router);
-        app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+        app.use('/api/order/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
         return app;
     }

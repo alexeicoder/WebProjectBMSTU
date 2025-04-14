@@ -33,7 +33,7 @@ class App {
         ));
         app.use(cookieParser());
         app.use("/api/auth/", router);
-        app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+        app.use('/api/auth/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
         return app;
     }
