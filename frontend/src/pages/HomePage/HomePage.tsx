@@ -156,7 +156,6 @@ function HomePage() {
                         description={item.description}
                         price={item.price}
                         count={item.count}
-                        img={item.img}
                         category_name={item.category_name}
                         onAddToCart={handleAddToCart}
                     />

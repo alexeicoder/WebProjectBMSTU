@@ -9,6 +9,8 @@ import Checkbox from '../../components/Checkbox/Checkbox';
 import { ROUTES, SERVICE_AUTH } from '../../routes/routes';
 import FormMessageBlock from '../../components/FormMessageBlock/FormMessageBlock';
 import PageLayout from '../../components/PageLayout/PageLayout';
+import { useNavigate } from 'react-router-dom';
+import { useCart } from '../../context/CartContext/CartContext';
 
 interface UserData {
   id: number;
@@ -25,6 +27,8 @@ const SettingsPage: React.FC = () => {
   const [userId, setUserId] = useState<number | null>(null);
   const [changePassword, setChangePassword] = useState<boolean>(false);
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
+  const { clearCart } = useCart();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -44,7 +48,9 @@ const SettingsPage: React.FC = () => {
           });
 
           if (!tryToRefreshToken.ok) {
-            throw new Error('Не удалось проверить токен. Пожалуйста, войдите снова.');
+            clearCart();
+            navigate(ROUTES.WELCOME);
+            // throw new Error('Не удалось проверить токен. Пожалуйста, войдите снова.');
           }
 
           const tryToRefreshTokenData = await tryToRefreshToken.json();

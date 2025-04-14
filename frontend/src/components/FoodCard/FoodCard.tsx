@@ -10,11 +10,10 @@ interface FoodCardProps {
     price: number;
     count: number;
     category_name: string;
-    img: string;
     onAddToCart: (productId: number, quantity: number) => void;
 }
 
-const FoodCard: React.FC<FoodCardProps> = ({ id, name, description, price, count, category_name, img, onAddToCart }) => {
+const FoodCard: React.FC<FoodCardProps> = ({ id, name, description, price, count, category_name, onAddToCart }) => {
     return (
         <div key={id} className={styles.foodCard}>
             <img src={getImgSrc(name)} alt={name} className={styles.foodImage} />

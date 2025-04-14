@@ -10,6 +10,7 @@ import empty_cart from '../../assets/food-2.svg';
 import { FiPlus, FiMinus } from 'react-icons/fi';
 import PageLayout from '../../components/PageLayout/PageLayout';
 import FormMessageBlock from '../../components/FormMessageBlock/FormMessageBlock';
+import { useNavigate } from 'react-router-dom';
 
 interface FoodItem {
     id: number;
@@ -28,6 +29,8 @@ const CartPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [userId, setUserId] = useState<number | null>(null);
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         const fetchFoodItems = async () => {
@@ -64,7 +67,9 @@ const CartPage: React.FC = () => {
                     });
 
                     if (!tryToRefreshToken.ok) {
-                        throw new Error('Не удалось проверить токен. Пожалуйста, войдите снова.');
+                        clearCart();
+                        navigate(ROUTES.WELCOME);
+                        // throw new Error('Не удалось проверить токен. Пожалуйста, войдите снова.');
                     }
 
                     const validateResponseData = await tryToRefreshToken.json();
