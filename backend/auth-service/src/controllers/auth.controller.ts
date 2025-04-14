@@ -76,16 +76,12 @@ export class AuthController {
             });
         }
 
-        if (validateLogin(login) === false) {
-            return res.status(400).json({
-                message: 'Некорректный логин.'
-            });
+        if (!validateLogin(login)) {
+            return res.status(400).json({ message: 'Некорректный логин.' });
         }
 
-        if (validatePassword(password) === false) {
-            return res.status(400).json({
-                message: 'Некорректный пароль.'
-            });
+        if (!validatePassword(password)) {
+            return res.status(400).json({ message: 'Некорректный пароль.' });
         }
 
         try {
@@ -126,16 +122,12 @@ export class AuthController {
             });
         }
 
-        if (validateLogin(login) === false) {
-            return res.status(400).json({
-                message: 'Некорректный логин.'
-            });
+        if (!validateLogin(login)) {
+            return res.status(400).json({ message: `Некорректная почта. Длинна должна быть от 8 до 32 символов. Недопустимые символы: пробел (), кавычки (', "), запятая(,) знак (*), нижнее подчёркивание(_).` });
         }
 
-        if (validatePassword(password) === false) {
-            return res.status(400).json({
-                message: 'Некорректный пароль.'
-            });
+        if (!validatePassword(password)) {
+            return res.status(400).json({ message: 'Некорректный пароль. Пароль должен содержать минимум 4 символа.' });
         }
 
         try {
@@ -243,7 +235,6 @@ export class AuthController {
     }
 
     public async getAllUsers(_req: Request, res: Response): Promise<any> {
-
         try {
             const users = this.userRepository.getAllUsers();
 
@@ -277,14 +268,14 @@ export class AuthController {
 
         if (updateData.password) {
             if (!validatePassword(updateData.password)) {
-                return res.status(400).json({ message: 'Некорректный пароль' });
+                return res.status(400).json({ message: 'Некорректный пароль. Пароль должен содержать минимум 4 символа.' });
             }
         }
 
         if (updateData.login) {
 
             if (!validateLogin(updateData.login)) {
-                return res.status(400).json({ message: 'Неккоректный логин' });
+                return res.status(400).json({ message: `Некорректная почта. Длинна должна быть от 8 до 32 символов. Недопустимые символы: пробел (), кавычки (', "), запятая(,) знак (*), нижнее подчёркивание(_).` });
             }
 
             const existingUser = await this.userRepository.findByLogin(updateData.login);

@@ -2,10 +2,10 @@
 .orderItem {
     border: 1px solid var(--button-borderColor-default);
     border-radius: 5px;
-    padding: 20px;
-    margin-bottom: 10px;
-    max-width: 350px;
-    min-width: 350px;
+    padding: 10px;
+    /* margin-bottom: 10px; */
+    max-width: 400px;
+    min-width: 400px;
 }
 
 .orderHeader {
@@ -31,4 +31,10 @@
     object-fit: cover;
     border: 1px solid var(--button-borderColor-default);
     border-radius: var(--border-radius-4);
+}
+
+.emptyCartImage {
+    height: 300px;
+    width: 300px;
+    object-fit: cover;
 }

@@ -5,6 +5,8 @@ import styles from './CartPage.module.css';
 import Button from '../../components/Button/Button';
 import { ROUTES, SERVICE_AUTH, SERVICE_FOOD, SERVICE_ORDER } from '../../routes/routes';
 
+import empty_cart from '../../assets/food-2.svg';
+
 import { FiPlus, FiMinus } from 'react-icons/fi';
 import PageLayout from '../../components/PageLayout/PageLayout';
 import FormMessageBlock from '../../components/FormMessageBlock/FormMessageBlock';
@@ -156,48 +158,53 @@ const CartPage: React.FC = () => {
 
     return (
         <>
-            <div className={styles.cartPage}>
-                <h1>Корзина</h1>
-                {cart.length === 0 ? (
-                    <p>Корзина пуста</p>
-                ) : (
-                    <>
-                        <ul className={styles.cartList}>
-                            {cart.map((cartItem) => {
-                                const foodItem = getFoodItemById(cartItem.productId);
-                                if (!foodItem) {
-                                    return null;
-                                }
-                                return (
-                                    <li key={cartItem.productId} className={styles.cartItem}>
-                                        <div className={styles.cartItemImageContainer}>
-                                            <img src={getImgSrc(foodItem.name)} alt={foodItem.name} className={styles.cartItemImage} />
-                                            <Button onClick={() => handleRemoveFromCart(cartItem.productId)}>Удалить</Button>
-                                        </div>
-                                        <div className={styles.cartItemInfo}>
-                                            <h3 className={styles.cartItemName}>{foodItem.name}</h3>
-                                            <p className={styles.cartItemPrice}>Цена: {foodItem.price}₽</p>
-                                            <div className={styles.quantityControl}>
-                                                <Button onClick={() => handleQuantityChange(cartItem.productId, cartItem.quantity - 1)} disabled={cartItem.quantity <= 1}>
-                                                    <FiMinus />
-                                                </Button>
-                                                <span>{cartItem.quantity}</span>
-                                                <Button onClick={() => handleQuantityChange(cartItem.productId, cartItem.quantity + 1)} disabled={cartItem.quantity >= foodItem.count}>
-                                                    <FiPlus />
-                                                </Button>
+            <div className={styles.layout}>
+                <div className={styles.cartPage}>
+                    <h1>Корзина</h1>
+                    {cart.length === 0 ? (
+                        <>
+                            <img src={empty_cart} alt="Корзина пуста" className={styles.emptyCartImage} />
+                            <p>Корзина пуста</p>
+                        </>
+                    ) : (
+                        <>
+                            <ul className={styles.cartList}>
+                                {cart.map((cartItem) => {
+                                    const foodItem = getFoodItemById(cartItem.productId);
+                                    if (!foodItem) {
+                                        return null;
+                                    }
+                                    return (
+                                        <li key={cartItem.productId} className={styles.cartItem}>
+                                            <div className={styles.cartItemImageContainer}>
+                                                <img src={getImgSrc(foodItem.name)} alt={foodItem.name} className={styles.cartItemImage} />
+                                                <Button onClick={() => handleRemoveFromCart(cartItem.productId)}>Удалить</Button>
                                             </div>
-                                        </div>
-                                    </li>
-                                );
-                            })}
-                        </ul>
-                        <Button onClick={handlePlaceOrder} className={'signinBtn'} disabled={isLoading}>
-                            Сделать заказ
-                        </Button>
-                    </>
-                )}
-                {isLoading && <div>Загрузка...</div>}
-                {error && <div>{error}</div>}
+                                            <div className={styles.cartItemInfo}>
+                                                <h3 className={styles.cartItemName}>{foodItem.name}</h3>
+                                                <p className={styles.cartItemPrice}>Цена: {foodItem.price}₽</p>
+                                                <div className={styles.quantityControl}>
+                                                    <Button onClick={() => handleQuantityChange(cartItem.productId, cartItem.quantity - 1)} disabled={cartItem.quantity <= 1}>
+                                                        <FiMinus />
+                                                    </Button>
+                                                    <span>{cartItem.quantity}</span>
+                                                    <Button onClick={() => handleQuantityChange(cartItem.productId, cartItem.quantity + 1)} disabled={cartItem.quantity >= foodItem.count}>
+                                                        <FiPlus />
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                            <Button onClick={handlePlaceOrder} className={'signinBtn'} disabled={isLoading}>
+                                Сделать заказ
+                            </Button>
+                        </>
+                    )}
+                    {isLoading && <div>Загрузка...</div>}
+                    {error && <div>{error}</div>}
+                </div>
             </div>
         </>
     );

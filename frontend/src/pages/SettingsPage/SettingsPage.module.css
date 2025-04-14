@@ -5,8 +5,15 @@
     flex-direction: column;
 }
 
+.profileContainer {
+    max-width: 420px;
+    min-width: 420px;
+    padding: 20px;
+    margin-left: -40px;
+}
+
 .header {
-    margin-top: 41px;
+    /* margin-top: 41px; */
     margin-left: 20px;
     margin-bottom: 0;
     color: var(--fgColor-default);

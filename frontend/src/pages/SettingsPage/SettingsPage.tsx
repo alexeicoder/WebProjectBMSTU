@@ -208,83 +208,87 @@ const SettingsPage: React.FC = () => {
 
   return (
     <>
-      <h1 className={styles.header}>Настроить профиль</h1>
-      <Form>
-        <FormElement>
-          <Label htmlFor="name">Имя:</Label>
-          {isEditing ? (
-            <Input
-              type="text"
-              id="name"
-              name="name"
-              value={userData.name}
-              onChange={handleInputChange}
-            />
-          ) : (
-            <Input id="name" name="name" value={userData.name} disabled={true} />
-          )}
-        </FormElement>
-        <FormElement>
-          <Label htmlFor="login">Логин:</Label>
-          {isEditing ? (
-            <Input
-              type="text"
-              id="login"
-              name="login"
-              value={userData.login}
-              onChange={handleInputChange}
-            />
-          ) : (
-            <Input id="login" name="login" value={userData.login} disabled={true} />
-          )}
-        </FormElement>
-        {isEditing && (
-          <>
+      <div className={styles.layout}>
+        <div className={styles.profileContainer}>
+          <h1 className={styles.header}>Профиль</h1>
+          <Form>
             <FormElement>
-              <Checkbox
-                checkboxId='changePassword'
-                labelText={'Изменить пароль'}
-                onClick={handleChangePasswordClick}
-                checked={changePassword}
-              />
-            </FormElement>
-            {changePassword && (
-              <FormElement>
-                <Label htmlFor="password">Пароль:</Label>
+              <Label htmlFor="name">Имя:</Label>
+              {isEditing ? (
                 <Input
-                  type="password"
-                  id="password"
-                  name="password"
-                  value={userData.password || ''}
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={userData.name}
                   onChange={handleInputChange}
                 />
-              </FormElement>
-            )}
-          </>
-        )
-        }
-        <FormElement>
-          {isEditing ? (
-            <>
-              <Button type="button" onClick={handleSaveClick} disabled={isLoading} className='signinBtn'>
-                Сохранить
+              ) : (
+                <Input id="name" name="name" value={userData.name} disabled={true} />
+              )}
+            </FormElement>
+            <FormElement>
+              <Label htmlFor="login">Логин:</Label>
+              {isEditing ? (
+                <Input
+                  type="text"
+                  id="login"
+                  name="login"
+                  value={userData.login}
+                  onChange={handleInputChange}
+                />
+              ) : (
+                <Input id="login" name="login" value={userData.login} disabled={true} />
+              )}
+            </FormElement>
+            {isEditing && (
+              <>
+                <FormElement>
+                  <Checkbox
+                    checkboxId='changePassword'
+                    labelText={'Изменить пароль'}
+                    onClick={handleChangePasswordClick}
+                    checked={changePassword}
+                  />
+                </FormElement>
+                {changePassword && (
+                  <FormElement>
+                    <Label htmlFor="password">Пароль:</Label>
+                    <Input
+                      type="password"
+                      id="password"
+                      name="password"
+                      value={userData.password || ''}
+                      onChange={handleInputChange}
+                    />
+                  </FormElement>
+                )}
+              </>
+            )
+            }
+            <FormElement>
+              {isEditing ? (
+                <>
+                  <Button type="button" onClick={handleSaveClick} disabled={isLoading} className='signinBtn'>
+                    Сохранить
+                  </Button>
+                  <Button type="button" onClick={handleCancelClick} disabled={isLoading}>
+                    Отмена
+                  </Button>
+                </>
+              ) : (
+                <Button type="button" onClick={handleEditClick} className='signinBtn'>
+                  Редактировать
+                </Button>
+              )}
+            </FormElement>
+            <FormElement>
+              <Button type="button" onClick={handleDeleteClick} disabled={isLoading}>
+                Удалить профиль
               </Button>
-              <Button type="button" onClick={handleCancelClick} disabled={isLoading}>
-                Отмена
-              </Button>
-            </>
-          ) : (
-            <Button type="button" onClick={handleEditClick} className='signinBtn'>
-              Редактировать
-            </Button>
-          )}
-        </FormElement>
-        <FormElement>
-          <Button type="button" onClick={handleDeleteClick} disabled={isLoading}>
-            Удалить профиль
-          </Button>
-        </FormElement>
-      </Form >
+            </FormElement>
+          </Form >
+        </div>
+      </div>
     </>
   );
 };

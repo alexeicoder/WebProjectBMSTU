@@ -5,6 +5,7 @@ import OrderCard from '../../components/OrderCard/OrderCard';
 import PageLayout from '../../components/PageLayout/PageLayout';
 import FormMessageBlock from '../../components/FormMessageBlock/FormMessageBlock';
 import { SERVICE_AUTH, SERVICE_ORDER } from '../../routes/routes';
+import empty_orders from '../../assets/food-1.svg';
 
 interface IOrderItem {
     id: number;
@@ -103,17 +104,23 @@ const OrderPage: React.FC = () => {
     }
 
     return (
-        <div className={styles.orderPage}>
-            <h1>Ваши заказы</h1>
-            {orders.length === 0 ? (
-                <p>У вас пока нет заказов</p>
-            ) : (
-                <ul className={styles.orderList}>
-                    {orders.map((order) => (
-                        <OrderCard key={order.id} order={order} />
-                    ))}
-                </ul>
-            )}
+        <div className={styles.layout}>
+            <div className={styles.orderPage}>
+                <h1>Ваши заказы</h1>
+                {orders.length === 0 ? (
+                    <>
+                        <img src={empty_orders} alt="У вас пока нет заказов" className={styles.emprtyOrdersImage} />
+                        <p>У вас пока нет заказов</p>
+                    </>
+
+                ) : (
+                    <ul className={styles.orderList}>
+                        {orders.map((order) => (
+                            <OrderCard key={order.id} order={order} />
+                        ))}
+                    </ul>
+                )}
+            </div>
         </div>
     );
 };

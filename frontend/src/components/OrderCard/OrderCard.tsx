@@ -27,7 +27,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
         <>
             <li key={order.id} className={styles.orderItem}>
                 <div className={styles.orderHeader}>
-                    <h2>Заказ №{order.id}</h2>
+                    <h3>Заказ №{order.id}</h3>
                     <p>Дата заказа: {new Date(order.order_date).toLocaleString()}</p>
                     <p>Статус: {order.status}</p>
                     <p>Сумма заказа: <b>{order.total_price}₽</b></p>
