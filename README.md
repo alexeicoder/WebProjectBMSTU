@@ -3,30 +3,30 @@ https://www.docker.com/products/docker-desktop/
 
 После установки перезапустить пк. 
 Далее открыть PowerShell с правами администратора и выполнить: 
-wsl --install
+  - wsl --install
 
 #########################################################################
 Установить typescript:
-node install -g typescript
+  - node install -g typescript
 
 Установить зависимости для backend и frontend соответственно:
-cd backend npm install
-cd frontend npm install
+  - cd backend npm install
+  - cd frontend npm install
 
 #########################################################################
 1. Как запустить backend:
 
 a. backend/auth-service
 - docker compose up
-доступен по адресу "http://localhost:3000/api/auth"
+- доступен по адресу "http://localhost:3000/api/auth"
 
 b. backend/food-service
 - docker compose up
-доступен по адресу "http://localhost:3200/api/food"
+- доступен по адресу "http://localhost:3200/api/food"
 
 c. backend/order-service
 - docker compose up
-доступен по адресу "http://localhost:3100/api/order"
+- доступен по адресу "http://localhost:3100/api/order"
 
 #########################################################################
 
@@ -46,7 +46,7 @@ frontend доступен по адресу "http://localhost:4000"
 docker network create backend-network
 
 Проверка
-docker network ls
+- docker network ls
 
 2.1 backend/auth-service
 - docker compose up
