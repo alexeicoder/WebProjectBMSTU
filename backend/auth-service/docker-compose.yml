@@ -1,29 +1,40 @@
-# version: '3.8'
+version: '3.8'
 
 services:
-  db:
+  auth-db:
     image: postgres:17
+    container_name: auth-db
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: alexei
       POSTGRES_DB: user_service
     ports:
-      - "3001:3001"
+      - "3001:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - auth-db-data:/var/lib/postgresql/data
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - backend-network
 
-  backend:
+  auth-service:
     build: .
+    container_name: auth-service
     ports:
-      - "3000:3000"  # Node.js слушает 3000 порт
+      - "3000:3000"
     environment:
-      DB_HOST: db
+      DB_HOST: auth-db
+      DB_PORT: 5432
       DB_USER: postgres
       DB_PASSWORD: alexei
       DB_NAME: user_service
     depends_on:
-      - db
+      - auth-db
+    networks:
+      - backend-network
 
 volumes:
-  postgres_data:
+  auth-db-data:
+
+networks:
+  backend-network:
+    external: true

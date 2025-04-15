@@ -16,7 +16,11 @@ export class OrderController {
 
     public async findById(req: Request, res: Response): Promise<any> {
 
+        console.log("/api/order/find/id");
+
         const orderId: number = parseInt(req.params.id);
+
+        console.log("/orderId: ", orderId);
 
         if (!orderId) {
             return res.status(400).json({ message: 'Order ID is required' });
@@ -33,6 +37,8 @@ export class OrderController {
                 return res.status(404).json({ message: 'Order not found' });
             }
 
+            console.log("order:\n", order);
+
             return res.status(200).json(order);
 
         } catch (error) {
@@ -44,19 +50,21 @@ export class OrderController {
     public async findByOwnerId(req: Request, res: Response): Promise<any> {
         const ownerId: number = parseInt(req.params.id);
 
+        console.log("/api/order/find/owner/id");
+        console.log("ownerId: ", ownerId);
+
         if (!ownerId) {
             return res.status(400).json({ message: 'Owner ID is required' });
         }
 
         try {
-
             const orders = await this.orderRepository.findByOwnerId(ownerId);
 
             for (const order of orders) {
                 if (order.order_items as IOrderItem[]) {
                     for (const orderItem of order.order_items) {
                         try {
-                            const foodItemResponse = await axios.get(`http://localhost:3200/api/food/find/id/${orderItem.id_food_item}`);
+                            const foodItemResponse = await axios.get(`http://food-service:3200/api/food/find/id/${orderItem.id_food_item}`);
                             const foodItemData = foodItemResponse.data;
                             orderItem.name = foodItemData.name;
                             orderItem.img = foodItemData.img;
@@ -69,6 +77,8 @@ export class OrderController {
                     }
                 }
             }
+
+            console.log("orders:\n", orders);
 
             return res.status(200).json({
                 count: orders.length,
@@ -86,18 +96,24 @@ export class OrderController {
     public async findByOwnerLogin(req: Request, res: Response): Promise<any> {
         const ownerLogin: string = req.params.owner_login as unknown as string;
 
+        console.log("/api/order/find/owner/login");
+        console.log('login: ', ownerLogin);
+
         if (!ownerLogin) {
             return res.status(400).json({ message: 'Owner login is required' });
         }
 
         try {
-            const user = await axios.get('http://localhost:3000/api/auth/find/user/login/' + ownerLogin);
+            const user = await axios.get('http://auth-service:3000/api/auth/find/user/login/' + ownerLogin);
 
             if (user.status === 404) {
                 return res.status(404).json({ message: `This order's owner not found` });
             }
 
             const ownerId = user.data.id;
+
+            console.log("ownerId: ", ownerId);
+
             const orders = await this.orderRepository.findByOwnerId(ownerId);
 
             return res.status(200).json({
@@ -122,28 +138,36 @@ export class OrderController {
 
     public async createOrder(req: Request, res: Response): Promise<any> {
 
+        console.log('/api/order/create');
+
         const ownerId: number = parseInt(req.body.ownerId);
         const foodItems: IFood[] = req.body.foodItems;
 
+        console.log("ownerId: ", ownerId);
+        console.log("foodItems:\n", foodItems);
+
         if (!ownerId) {
+            console.log("!ownerId activated");
             return res.status(400).json({ message: 'Owner ID is required' });
         }
 
         if (!foodItems
             || Object.keys(foodItems).length === 0
             || !Array.isArray(foodItems)) {
+            console.log("!foodItems || Object.keys(foodItems).length === 0 || !Array.isArray(foodItems)");
             return res.status(400).json({ message: 'Food items are required' });
         }
 
-        console.log(foodItems);
-
         try {
-            const ownerExists = await axios.get('http://localhost:3000/api/auth/exists/user/' + ownerId);
+            console.log("try to do ownerExists");
+            const ownerExists = await axios.get('http://auth-service:3000/api/auth/exists/user/' + ownerId);
+            console.log("ownerExists: ", ownerExists);
 
             if (ownerExists.data.exists === false) {
                 return res.status(404).json({ message: 'Owner not found' });
             }
 
+            console.log("try to do order");
             const order = await this.orderRepository.createOrder(ownerId, foodItems);
 
             return res.status(200).json(order);

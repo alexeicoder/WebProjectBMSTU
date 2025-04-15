@@ -168,6 +168,10 @@ const CartPage: React.FC = () => {
         }
     };
 
+    if (isLoading) {
+        return <FullScreenLoading isLoading={true} />;
+    }
+
     if (error) {
         return (
             <PageLayout>
@@ -226,7 +230,6 @@ const CartPage: React.FC = () => {
                             </Button>
                         </>
                     )}
-                    {isLoading && <div>Загрузка...</div>}
                     {error && <div>{error}</div>}
                 </div>
             </div>

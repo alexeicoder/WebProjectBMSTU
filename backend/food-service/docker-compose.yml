@@ -1,29 +1,43 @@
-# version: '3.8'
+version: '3.8'
 
 services:
-  db:
+  food-db:
     image: postgres:17
+    container_name: food-db
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: alexei
       POSTGRES_DB: food_service
+      # POSTGRES_PORT не нужен - Postgres всегда использует 5432 внутри контейнера
     ports:
-      - "3201:3201"
+      - "3201:5432"  # Маппинг порта хоста 3201 на порт контейнера 5432
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - food-db-data:/var/lib/postgresql/data
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - backend-network
 
-  backend:
+  food-service:
     build: .
+    container_name: food-service
     ports:
-      - "3200:3200"  # Node.js слушает 3200 порт
+      - "3200:3200"
     environment:
-      DB_HOST: db
+      DB_HOST: food-db  # Обращение по имени сервиса
+      DB_PORT: 5432     # Стандартный порт Postgres внутри сети Docker
       DB_USER: postgres
       DB_PASSWORD: alexei
       DB_NAME: food_service
+      # Добавьте URL для auth-service, если нужно
+      AUTH_SERVICE_URL: "http://auth-service:3000/api/auth"
     depends_on:
-      - db
+      - food-db  # Исправлено: должно быть food-db, а не food_db
+    networks:
+      - backend-network
 
 volumes:
-  postgres_data:
+  food-db-data:
+
+networks:
+  backend-network:
+    external: true

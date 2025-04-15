@@ -118,7 +118,7 @@ function HomePage() {
         : foodItems;
 
     if (isLoading) {
-        return <FullScreenLoading isLoading={true} />;;
+        return <FullScreenLoading isLoading={true} />;
     }
 
     if (error) {
@@ -130,7 +130,7 @@ function HomePage() {
     }
 
     if (!foodItems) {
-        return <div>Загрузка...</div>;
+        return <FullScreenLoading isLoading={true} />;
     }
 
     return (

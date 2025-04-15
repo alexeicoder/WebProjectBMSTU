@@ -17,6 +17,12 @@ frontend доступен по адресу "http://localhost:4000"
 
 2. Как запустить backend:
 
+Сначала создаем общую сеть (для взаимодейтсвия сервисов auth, food, order):
+docker network create backend-network
+
+Проверка
+docker network ls
+
 2.1 backend/auth-service
 - docker compose up
 доступен по адресу "http://localhost:3000/api/auth"

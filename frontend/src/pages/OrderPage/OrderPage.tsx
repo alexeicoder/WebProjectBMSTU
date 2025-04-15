@@ -107,7 +107,7 @@ const OrderPage: React.FC = () => {
     }, [userId]);
 
     if (isLoading) {
-        return <div>Загрузка...</div>;
+        return <FullScreenLoading isLoading={true} />;
     }
 
     if (error) {

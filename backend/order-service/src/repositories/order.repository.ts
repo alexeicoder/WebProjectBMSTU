@@ -12,6 +12,7 @@ export class OrderRepository {
     }
 
     public async findByOwnerId(ownerId: number): Promise<IOrder[]> {
+
         const result = await this.db.query<IOrder>(`SELECT * FROM orders WHERE user_id = $1`, [ownerId]);
         const orders = result.rows;
 
@@ -23,6 +24,7 @@ export class OrderRepository {
             order.order_items = orderItemsResult.rows;
         }
 
+        console.log("orders\n: ", orders);
         return orders;
     }
 
@@ -33,16 +35,15 @@ export class OrderRepository {
 
     public async createOrder(ownerId: number, foodItems: IFood[]): Promise<IOrder> {
         const client = await this.db.getClient();
-
-        console.log("Foods", foodItems);
-
+        console.log("Repository starting create order");
         try {
             await client.query('BEGIN');
+            console.log(`await client.query('BEGIN')`);
 
             // Calculate total price
             const totalPrice = foodItems.reduce((sum, item) => sum + (item.price * item.count), 0);
 
-            // console.log("totalPrice", totalPrice);
+            console.log("Calculated totalPrice: ", totalPrice);
 
             // Create order
             const orderResult = await client.query<IOrder>(
@@ -50,6 +51,8 @@ export class OrderRepository {
                 [ownerId, totalPrice, 'pending', new Date(),]
             );
             const order = orderResult.rows[0];
+
+            console.log("Order: ", order);
 
             // Create order items
             const orderItems: IOrderItem[] = [];
@@ -62,12 +65,15 @@ export class OrderRepository {
                 orderItems.push(orderItemResult.rows[0]);
             }
 
+            console.log("orderItems:\n", orderItems);
+
             await client.query('COMMIT');
 
             return { ...order, order_items: orderItems };
         }
         catch (error) {
             await client.query('ROLLBACK');
+            console.log("Couldn't create order by repository");
             throw error;
         } finally {
             client.release();

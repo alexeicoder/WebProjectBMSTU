@@ -1,6 +1,6 @@
 -- DATA_BASE food_items
 CREATE TABLE IF NOT EXISTS food_items (
-    id integer NOT NULL,
+    id SERIAL PRIMARY KEY,
     name text NOT NULL,
     count integer NOT NULL,
     price integer NOT NULL,
@@ -9,17 +9,11 @@ CREATE TABLE IF NOT EXISTS food_items (
     id_category integer NOT NULL
 );
 
-ALTER TABLE ONLY food_items
-    ADD CONSTRAINT food_items_pkey PRIMARY KEY (id);
-
 -- DATA_BASE food_items
 CREATE TABLE IF NOT EXISTS food_categories (
-    id integer NOT NULL,
+    id SERIAL PRIMARY KEY,
     name text NOT NULL
 );
-
-ALTER TABLE ONLY food_categories
-    ADD CONSTRAINT food_categories_pkey PRIMARY KEY (id);
 
 ALTER TABLE ONLY food_items
     ADD CONSTRAINT food_items_id_category_fkey FOREIGN KEY (id_category) REFERENCES food_categories(id);

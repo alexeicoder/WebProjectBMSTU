@@ -4,6 +4,7 @@ import router from "../routes/routes";
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import { timeoutMiddleware } from "../middleware/auth.middleware";
 
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
@@ -32,6 +33,9 @@ class App {
             }
         ));
         app.use(cookieParser());
+
+        app.use(timeoutMiddleware(5000));
+
         app.use("/api/auth/", router);
         app.use('/api/auth/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 

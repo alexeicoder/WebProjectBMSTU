@@ -59,12 +59,6 @@ function SignupForm() {
         setErrorMessage(null)
     };
 
-    // if (loading) {
-    //     return (
-    //         <div>Загрузка...</div>
-    //     );
-    // }
-
     return (
         <>
             {/* {error && console.warn(error)} */}

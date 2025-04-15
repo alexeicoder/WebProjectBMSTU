@@ -1,7 +1,7 @@
 export interface IOrder {
     id: number;
     user_id: number;
-    update_date: Date;
+    // update_date: Date;
     total_price: number;
     status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
     order_date: Date;

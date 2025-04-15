@@ -180,7 +180,7 @@ const SettingsPage: React.FC = () => {
   }
 
   if (isLoading) {
-    return <div className={styles.layout}>Загрузка...</div>;
+    return <FullScreenLoading isLoading={true} />;
   }
 
   if (error) {

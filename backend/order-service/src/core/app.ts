@@ -3,6 +3,7 @@ import { createServer, Server } from "http";
 import router from "../routes/routes";
 import bodyParser from 'body-parser';
 import cors from 'cors';
+// import { timeoutMiddleware } from "../middleware/timeout.middleware";
 
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
@@ -30,6 +31,9 @@ class App {
                 credentials: true, // Разрешить отправку учётных данных
             }
         ));
+
+        // app.use(timeoutMiddleware(5000));
+
         app.use("/api/order/", router);
         app.use('/api/order/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 

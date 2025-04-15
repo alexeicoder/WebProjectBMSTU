@@ -1,29 +1,42 @@
-# version: '3.8'
+version: '3.8'
 
 services:
-  db:
+  order-db:
     image: postgres:17
+    container_name: order-db
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: alexei
       POSTGRES_DB: order_service
     ports:
-      - "3101:3101"
+      - "3101:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - order-db-data:/var/lib/postgresql/data
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - backend-network
 
-  backend:
+  order-service:
     build: .
+    container_name: order-service
     ports:
-      - "3100:3100"  # Node.js слушает 3100 порт
+      - "3100:3100"
     environment:
-      DB_HOST: db
+      DB_HOST: order-db
+      DB_PORT: 5432
       DB_USER: postgres
       DB_PASSWORD: alexei
       DB_NAME: order_service
+      AUTH_SERVICE_URL: "http://auth-service:3000/api/auth"
+      FOOD_SERVICE_URL: "http://food-service:3200/api/food"  # Исправлено с auth-service на food-service
     depends_on:
-      - db
+      - order-db  # Исправлен синтаксис depends_on
+    networks:
+      - backend-network
 
 volumes:
-  postgres_data:
+  order-db-data:
+
+networks:
+  backend-network:
+    external: true
