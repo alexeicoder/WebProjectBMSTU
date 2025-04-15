@@ -6,6 +6,14 @@ https://www.docker.com/products/docker-desktop/
 wsl --install
 
 #########################################################################
+Установить typescript:
+node install -g typescript
+
+Установить зависимости для backend и frontend соответственно:
+cd backend npm install
+cd frontend npm install
+
+#########################################################################
 1. Как запустить backend:
 
 a. backend/auth-service
