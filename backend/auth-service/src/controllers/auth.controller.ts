@@ -341,7 +341,6 @@ export class AuthController {
         }
     }
 
-
     private setCookies(res: Response, tokens: IToken) {
         res.cookie('access_cookie', tokens.accessToken, {
             httpOnly: true,

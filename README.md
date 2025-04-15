@@ -17,7 +17,7 @@ b. backend/food-service
 доступен по адресу "http://localhost:3200/api/food"
 
 c. backend/order-service
-- docker compose up
+- docker comppose up
 доступен по адресу "http://localhost:3100/api/order"
 
 #########################################################################

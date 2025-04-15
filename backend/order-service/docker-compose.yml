@@ -28,9 +28,9 @@ services:
       DB_PASSWORD: alexei
       DB_NAME: order_service
       AUTH_SERVICE_URL: "http://auth-service:3000/api/auth"
-      FOOD_SERVICE_URL: "http://food-service:3200/api/food"  # Исправлено с auth-service на food-service
+      FOOD_SERVICE_URL: "http://food-service:3200/api/food"
     depends_on:
-      - order-db  # Исправлен синтаксис depends_on
+      - order-db 
     networks:
       - backend-network
 
