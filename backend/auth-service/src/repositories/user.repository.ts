@@ -6,9 +6,7 @@ import { IUser } from '../interfaces/auth.interfaces';
 export class UserRepository {
 
     // Constuctor
-    constructor(private db: Database) {
-        // console.log("UserRepository created, db:", db);
-    }
+    constructor(private db: Database) { }
 
     // Methods
     public async findByLogin(login: string): Promise<IUser | null> {

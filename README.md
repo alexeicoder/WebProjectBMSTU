@@ -5,12 +5,29 @@ https://www.docker.com/products/docker-desktop/
 Далее открыть PowerShell с правами администратора и выполнить: 
 wsl --install
 
-1. Как запустить frontend:
+#########################################################################
+1. Как запустить backend:
 
-1.1. Построить image docker
+a. backend/auth-service
+- docker compose up
+доступен по адресу "http://localhost:3000/api/auth"
+
+b. backend/food-service
+- docker compose up
+доступен по адресу "http://localhost:3200/api/food"
+
+c. backend/order-service
+- docker compose up
+доступен по адресу "http://localhost:3100/api/order"
+
+#########################################################################
+
+2. Как запустить frontend:
+
+a. Построить image docker
 docker build -t frontend-app .
 
-2.2. Запустить контейнер
+b. Запустить контейнер
 docker run -d -p 4000:80 --name web-frontend frontend-app
 
 frontend доступен по адресу "http://localhost:4000"

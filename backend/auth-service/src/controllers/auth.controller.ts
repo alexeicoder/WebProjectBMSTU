@@ -3,7 +3,6 @@ import { Request, Response } from "express";
 import { IToken, IAuthRequest } from "../interfaces/auth.interfaces";
 import { UserRepository } from '../repositories/user.repository';
 import jwt from 'jsonwebtoken';
-// import bcrypt from 'bcrypt';
 import { validateLogin, validatePassword } from "../utils/auth.validate";
 
 export class AuthController {
@@ -92,8 +91,6 @@ export class AuthController {
                 });
             }
 
-            // const hashedPassword = await bcrypt.hash(password, 10);
-            // const userId = await this.userRepository.createUser(login, hashedPassword, name);
             const userId = await this.userRepository.createUser(login, password, name);
             const tokens = this.generateTokens(userId);
 
@@ -137,16 +134,10 @@ export class AuthController {
                 return res.status(401).json({ success: false, message: 'Пользователь не найден.' });
             }
 
-            // Проверка пароля
-            // const isPasswordValid = await bcrypt.compare(password, user.password);
-            // if (!isPasswordValid) {
-            //     return res.status(401).json({ success: false, message: 'Неверный пароль.' });
-            // }
             if (password !== user.password) {
                 return res.status(401).json({ success: false, message: 'Неверный пароль.' });
             }
 
-            // Генерация токенов
             const { accessToken, refreshToken } = this.generateTokens(user.id);
 
             this.setCookies(res, { accessToken, refreshToken });
@@ -190,7 +181,6 @@ export class AuthController {
         }
 
         try {
-            // Поиск пользователя в базе данных
             const user = await this.userRepository.findById(userId);
 
             if (!user) {
@@ -337,9 +327,9 @@ export class AuthController {
             return res.status(400).json({ message: 'user ID is required' });
         }
 
-        // if (isNaN(userId)) {
-        //     return res.status(400).json({ message: 'user ID must be a number' });
-        // }
+        if (isNaN(userId)) {
+            return res.status(400).json({ message: 'user ID must be a number' });
+        }
 
         try {
             const result = await this.userRepository.ifExistsById(userId);
