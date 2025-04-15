@@ -11,6 +11,7 @@ import { FiPlus, FiMinus } from 'react-icons/fi';
 import PageLayout from '../../components/PageLayout/PageLayout';
 import FormMessageBlock from '../../components/FormMessageBlock/FormMessageBlock';
 import { useNavigate } from 'react-router-dom';
+import FullScreenLoading from '../../components/FullScreenLoading/FullScreenLoading';
 
 interface FoodItem {
     id: number;
@@ -29,6 +30,7 @@ const CartPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [userId, setUserId] = useState<number | null>(null);
+    const [isLoadingValidation, setIsLoadingValidation] = useState<boolean>(false);
     const navigate = useNavigate();
 
 
@@ -57,6 +59,7 @@ const CartPage: React.FC = () => {
 
     useEffect(() => {
         const fetchUserId = async () => {
+            setIsLoadingValidation(true);
             try {
                 const validateResponse = await fetch(SERVICE_AUTH.VALIDATE_TOKEN, {
                     method: 'GET',
@@ -84,9 +87,12 @@ const CartPage: React.FC = () => {
                 }
             } catch (err) {
                 if (err instanceof Error && err.message === 'Failed to fetch') {
-                    setError('Сервер недоступен. Попробуйте позже.');
+                    navigate(ROUTES.WELCOME);
+                    // setError('Сервер недоступен. Попробуйте позже.');
                 }
                 setError(err instanceof Error ? err.message : 'Failed to fetch user ID.');
+            } finally {
+                setIsLoadingValidation(false);
             }
         };
 
@@ -168,6 +174,10 @@ const CartPage: React.FC = () => {
                 <FormMessageBlock message={error} type='error' />
             </PageLayout>
         );
+    }
+
+    if (isLoadingValidation) {
+        return <FullScreenLoading isLoading={true} />;;
     }
 
     return (

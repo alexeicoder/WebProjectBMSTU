@@ -11,6 +11,7 @@ import FormMessageBlock from '../../components/FormMessageBlock/FormMessageBlock
 import PageLayout from '../../components/PageLayout/PageLayout';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext/CartContext';
+import FullScreenLoading from '../../components/FullScreenLoading/FullScreenLoading';
 
 interface UserData {
   id: number;
@@ -28,11 +29,12 @@ const SettingsPage: React.FC = () => {
   const [changePassword, setChangePassword] = useState<boolean>(false);
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
   const { clearCart } = useCart();
+  const [isLoadingValidation, setIsLoadingValidation] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserId = async () => {
-      setIsLoading(true);
+      setIsLoadingValidation(true);
       setError(null);
       try {
         // First, validate token to get userId
@@ -61,9 +63,10 @@ const SettingsPage: React.FC = () => {
           setUserId(validateResponseData.userId);
         }
       } catch (err) {
+        navigate(ROUTES.WELCOME);
         setError(err instanceof Error ? err.message : 'Failed to load user data.');
       } finally {
-        setIsLoading(false);
+        setIsLoadingValidation(false);
       }
     };
 
@@ -171,6 +174,10 @@ const SettingsPage: React.FC = () => {
       setIsLoading(false);
     }
   };
+
+  if (isLoadingValidation) {
+    return <FullScreenLoading isLoading={true} />;
+  }
 
   if (isLoading) {
     return <div className={styles.layout}>Загрузка...</div>;

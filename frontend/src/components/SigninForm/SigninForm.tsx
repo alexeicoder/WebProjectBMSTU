@@ -13,6 +13,7 @@ import FormElement from "../FormElement/FormElement";
 
 // data
 import { ROUTES, SERVICE_AUTH } from "../../routes/routes";
+import FullScreenLoading from "../FullScreenLoading/FullScreenLoading";
 
 interface ErrorResponse {
     message: string;
@@ -66,59 +67,62 @@ function SigninForm() {
         }
     };
 
-    if (loading) {
-        return <div>Загрузка...</div>;
-    }
+    // if (loading) {
+    //     return <FullScreenLoading isLoading={true} />;
+    // }
 
     return (
-        <Form
-            onSubmit={handleSubmit}
-            head={formHead}
-            footer={formFooter}
-        >
-            {errorMessage && (
-                <FormMessageBlock
-                    type={'error'}
-                    message={errorMessage}
-                    onClose={handleCloseError}
-                />
-            )}
-            <FormElement>
-                <Label htmlFor={'login'}>Почта</Label>
-                <Input
-                    id={'login'}
-                    value={login}
-                    type={'email'}
-                    required={true}
-                    autoComplete={'email'}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLogin(e.target.value)}
-                    placeholder={'Введите вашу почту'}
-                />
-            </FormElement>
-            <FormElement>
-                <Label htmlFor={'password'}>Пароль</Label>
-                <Input
-                    id={'password'}
-                    value={password}
-                    type={showPassword ? 'text' : 'password'}
-                    required={true}
-                    autoComplete={'current-password'}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-                    placeholder={'Введите пароль'}
-                />
-            </FormElement>
-            <FormElement>
-                <Checkbox
-                    checkboxId='passwordVisibility'
-                    labelText={'Показать пароль'}
-                    onClick={changePasswordVisibility}
-                    checked={showPassword}
-                />
-            </FormElement>
-            <FormElement>
-                <Button type="submit" className={'signinFormBtn'}>Войти</Button>
-            </FormElement>
-        </Form>
+        <>
+            <Form
+                onSubmit={handleSubmit}
+                head={formHead}
+                footer={formFooter}
+            >
+                {errorMessage && (
+                    <FormMessageBlock
+                        type={'error'}
+                        message={errorMessage}
+                        onClose={handleCloseError}
+                    />
+                )}
+                <FormElement>
+                    <Label htmlFor={'login'}>Почта</Label>
+                    <Input
+                        id={'login'}
+                        value={login}
+                        type={'email'}
+                        required={true}
+                        autoComplete={'email'}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLogin(e.target.value)}
+                        placeholder={'Введите вашу почту'}
+                    />
+                </FormElement>
+                <FormElement>
+                    <Label htmlFor={'password'}>Пароль</Label>
+                    <Input
+                        id={'password'}
+                        value={password}
+                        type={showPassword ? 'text' : 'password'}
+                        required={true}
+                        autoComplete={'current-password'}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                        placeholder={'Введите пароль'}
+                    />
+                </FormElement>
+                <FormElement>
+                    <Checkbox
+                        checkboxId='passwordVisibility'
+                        labelText={'Показать пароль'}
+                        onClick={changePasswordVisibility}
+                        checked={showPassword}
+                    />
+                </FormElement>
+                <FormElement>
+                    <Button type="submit" className={'signinFormBtn'}>Войти</Button>
+                </FormElement>
+            </Form>
+            {loading && <FullScreenLoading isLoading={true} />}
+        </>
     );
 }
 

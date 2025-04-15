@@ -8,6 +8,7 @@ import { useCart } from '../../context/CartContext/CartContext';
 import ModalMessage from '../../components/ModalMessage/ModalMessage';
 import PageLayout from '../../components/PageLayout/PageLayout';
 import { SERVICE_FOOD } from '../../routes/routes';
+import FullScreenLoading from '../../components/FullScreenLoading/FullScreenLoading';
 
 interface FoodItem {
     id: number;
@@ -117,7 +118,7 @@ function HomePage() {
         : foodItems;
 
     if (isLoading) {
-        return <div>Загрузка...</div>;
+        return <FullScreenLoading isLoading={true} />;;
     }
 
     if (error) {

@@ -1,0 +1,29 @@
+# version: '3.8'
+
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: alexei
+      POSTGRES_DB: food_service
+    ports:
+      - "3201:3201"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  backend:
+    build: .
+    ports:
+      - "3200:3200"  # Node.js слушает 3200 порт
+    environment:
+      DB_HOST: db
+      DB_USER: postgres
+      DB_PASSWORD: alexei
+      DB_NAME: food_service
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:

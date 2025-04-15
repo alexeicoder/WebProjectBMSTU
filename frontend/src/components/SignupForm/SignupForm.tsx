@@ -7,6 +7,8 @@ import { ROUTES, SERVICE_AUTH } from "../../routes/routes";
 import FormMessageBlock from "../FormMessageBlock/FormMessageBlock";
 import FormElement from "../FormElement/FormElement";
 import axios, { AxiosError } from "axios";
+import FullScreenLoading from "../FullScreenLoading/FullScreenLoading";
+import { useNavigate } from "react-router-dom";
 
 const formHead = 'Регистрация';
 const formFooter = <span>Уже есть аккаунт? <a href={ROUTES.SIGN_IN}>Войти</a></span>;
@@ -22,6 +24,7 @@ function SignupForm() {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null) // Для отображения ошибок
+    const navigate = useNavigate();
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -33,7 +36,8 @@ function SignupForm() {
                 { login, password, name },
                 { withCredentials: true });
             if (response.status === 200) {
-                console.log("Response: ", response.data)
+                console.log("Response: ", response.data);
+                navigate(ROUTES.HOME);
             }
         } catch (error) {
             const axiosError = error as AxiosError<ErrorResponse>;
@@ -55,11 +59,11 @@ function SignupForm() {
         setErrorMessage(null)
     };
 
-    if (loading) {
-        return (
-            <div>Загрузка...</div>
-        );
-    }
+    // if (loading) {
+    //     return (
+    //         <div>Загрузка...</div>
+    //     );
+    // }
 
     return (
         <>
@@ -118,6 +122,7 @@ function SignupForm() {
                     >Зарегистрироваться</Button>
                 </FormElement>
             </Form>
+            {loading && <FullScreenLoading isLoading={true} />}
         </>
     )
 

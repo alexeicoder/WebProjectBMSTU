@@ -15,7 +15,7 @@
 
 1. в food-service
 1 таблица: food_items (id, name, count, price, description, img, id_category)
-2 таблица: food_category (id, name)
+2 таблица: food_categories (id, name)
 
 2. в order-service
 1 таблица: orders (id, user_id, update_date, total_amount, status, created_date)

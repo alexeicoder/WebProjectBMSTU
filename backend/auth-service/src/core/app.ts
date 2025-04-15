@@ -39,19 +39,12 @@ class App {
     }
 
     public async start(): Promise<void> {
-        // Starting database
-        // try {
-        //     await this.database.connect();
-        //     const isConnected = await this.database.checkConnection();
-        //     if (!isConnected) throw new Error('Database connection failed');
-        // } catch (error) {
-        //     console.error('Failed to start database:', error);
-        //     process.exit(1);
-        // }
-        // Starting server
         this.server.listen(this.port, this.host, () => {
             console.log(`Auth server is running on url http://${this.host}:${this.port}/api/auth`)
         });
+        // this.server.listen(3000, '0.0.0.0', () => {
+        //     console.log(`Auth server is running on url http://0.0.0.0:3000/api/auth`)
+        // });
     }
 
     public async stop(): Promise<void> {

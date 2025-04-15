@@ -8,6 +8,7 @@ import { ROUTES, SERVICE_AUTH, SERVICE_ORDER } from '../../routes/routes';
 import empty_orders from '../../assets/food-1.svg';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext/CartContext';
+import FullScreenLoading from '../../components/FullScreenLoading/FullScreenLoading';
 
 interface IOrderItem {
     id: number;
@@ -35,12 +36,14 @@ const OrderPage: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     // const { cart } = useCart();
     const [userId, setUserId] = useState<number | null>(null);
+    const [isLoadingValidation, setIsLoadingValidation] = useState<boolean>(false);
     const navigate = useNavigate();
 
     const { clearCart } = useCart();
 
     useEffect(() => {
         const fetchUserId = async () => {
+            setIsLoadingValidation(true);
             try {
                 const validateResponse = await fetch(SERVICE_AUTH.VALIDATE_TOKEN, {
                     method: 'GET',
@@ -68,6 +71,9 @@ const OrderPage: React.FC = () => {
 
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'Failed to fetch user ID.');
+                navigate(ROUTES.WELCOME);
+            } finally {
+                setIsLoadingValidation(false);
             }
         };
 
@@ -111,6 +117,12 @@ const OrderPage: React.FC = () => {
             </PageLayout>
         );
     }
+
+    if (isLoadingValidation) {
+        return <FullScreenLoading isLoading={true} />;
+    }
+
+    console.log(orders)
 
     return (
         <div className={styles.layout}>

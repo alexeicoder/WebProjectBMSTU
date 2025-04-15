@@ -28,7 +28,6 @@ class App {
                 origin: 'http://localhost:4000',
                 methods: ['GET', 'POST', 'PUT', 'DELETE'], // Разрешенные HTTP-методы
                 credentials: true, // Разрешить отправку учётных данных
-                // withCredentials: true
             }
         ));
         app.use("/api/food/", router);

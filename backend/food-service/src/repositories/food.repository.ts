@@ -26,7 +26,7 @@ export class FoodRepository {
                 fi.id_category,
                 fc.name AS "category_name"
             FROM food_items fi
-            JOIN food_category fc ON fi.id_category = fc.id
+            JOIN food_categories fc ON fi.id_category = fc.id
         `;
 
         const result = await this.db.query<IFood>(query);
@@ -35,7 +35,7 @@ export class FoodRepository {
     }
 
     public async getAllFoodCategories(): Promise<IFoodCategory[]> {
-        const result = await this.db.query<IFoodCategory>('SELECT * FROM food_category');
+        const result = await this.db.query<IFoodCategory>('SELECT * FROM food_categories');
 
         return result.rows;
     }
