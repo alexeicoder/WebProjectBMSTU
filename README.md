@@ -5,7 +5,6 @@ docker build -t frontend-app .
 
 2.2. Запустить контейнер
 docker run -d -p 4000:80 --name web-frontend frontend-app
-
 frontend доступен по адресу "http://localhost:4000"
 
 2. как запустить backend:
