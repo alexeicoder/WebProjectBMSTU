@@ -7,7 +7,7 @@ https://www.docker.com/products/docker-desktop/
 
 #########################################################################
 Установить typescript:
-  - node install -g typescript
+  - npm install -g typescript
 
 Установить зависимости для backend и frontend соответственно:
   - cd backend npm install
